@@ -2718,6 +2718,14 @@
         $p('#libraryGameProgress').value = Number(game?.progress || 0);
         $p('#libraryGameCover').value = game?.cover || '';
         $p('#libraryGameNote').value = game?.note || '';
+        $p('#libraryGamePlatform').value = game?.platform || '';
+        $p('#libraryGameHours').value = game?.hours ?? '';
+        $p('#libraryGameRating').value = game?.rating ?? '';
+        $p('#libraryGameRoutes').value = Array.isArray(game?.routes) ? game.routes.join('，') : (game?.routes || '');
+        const timeline=window.AmoristTimelineStore?.read?.()||[];
+        const startDateField=$p('#libraryGameStartDate'),completeDateField=$p('#libraryGameCompleteDate');
+        if(startDateField)startDateField.value = timeline.find(event=>String(event?.gameId||'')===String(game?.id||'')&&event.type==='started')?.occurredAt || '';
+        if(completeDateField)completeDateField.value = timeline.find(event=>String(event?.gameId||'')===String(game?.id||'')&&event.type==='completed')?.occurredAt || '';
         $p('#deleteGameButton').hidden = !game;
         $p('#gameDialogOverlay').classList.add('open');
         setTimeout(() => $p('#libraryGameName').focus(), 30);
@@ -2730,7 +2738,8 @@
         event.preventDefault();
         const games = loadGames();
         const id = $p('#editingGameId').value;
-        const record = { id:id || `game-${Date.now()}`, name:$p('#libraryGameName').value.trim(), status:$p('#libraryGameStatus').value, category:dataModel.normalizeGameCategory($p('#libraryGameCategory').value), progress:Math.max(0,Math.min(100,Number($p('#libraryGameProgress').value)||0)), cover:$p('#libraryGameCover').value.trim(), note:$p('#libraryGameNote').value.trim(), updatedAt:Date.now() };
+        const routes=$p('#libraryGameRoutes').value.split(/[，,]/).map(value=>value.trim()).filter(Boolean);
+        const record = { id:id || `game-${Date.now()}`, name:$p('#libraryGameName').value.trim(), status:$p('#libraryGameStatus').value, category:dataModel.normalizeGameCategory($p('#libraryGameCategory').value), progress:Math.max(0,Math.min(100,Number($p('#libraryGameProgress').value)||0)), cover:$p('#libraryGameCover').value.trim(), note:$p('#libraryGameNote').value.trim(), platform:$p('#libraryGamePlatform').value.trim(), hours:Number($p('#libraryGameHours').value)||0, rating:Number($p('#libraryGameRating').value)||0, routes, routeDone:Array.isArray(games.find(item=>String(item.id)===String(id))?.routeDone)?games.find(item=>String(item.id)===String(id)).routeDone:[], logs:games.find(item=>String(item.id)===String(id))?.logs||[], updatedAt:Date.now() };
         const index = games.findIndex(item => String(item.id) === String(id));
         if (index >= 0) games[index] = record; else games.push(record);
         saveGames(games); closeGameDialog(); renderGameLibrary(); renderDashboard(); productToast('游戏记录已保存');
@@ -3194,15 +3203,17 @@
       $('#libraryCoverUploadButton').onclick=()=>$('#libraryCoverUploadInput').click();
       $('#libraryCoverUploadInput').onchange=event=>{const file=event.target.files?.[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{const image=new Image();image.onload=()=>{const max=480,scale=Math.min(1,max/Math.max(image.width,image.height)),canvas=document.createElement('canvas');canvas.width=Math.round(image.width*scale);canvas.height=Math.round(image.height*scale);canvas.getContext('2d').drawImage(image,0,0,canvas.width,canvas.height);$('#libraryGameCover').value=canvas.toDataURL('image/jpeg',.74);toast('本地封面已压缩并加入档案')};image.src=reader.result};reader.readAsDataURL(file);event.target.value=''};
 
-      $('#gameDialogForm').addEventListener('submit',()=>setTimeout(()=>{
+      $('#gameDialogForm').addEventListener('submit',event=>{
+        event.preventDefault();
         const rows=games(), id=$('#editingGameId').value || rows.at(-1)?.id, index=rows.findIndex(g=>g.id===id);
         if(index<0)return;
         const old=rows[index];
 const routes=$('#libraryGameRoutes').value.split(/[，,]/).map(x=>x.trim()).filter(Boolean),progress=gameRouteProgress(routes,old.routeDone||[]);rows[index]={...old,category:dataModel.normalizeGameCategory($('#libraryGameCategory').value),platform:$('#libraryGamePlatform').value.trim(),hours:Number($('#libraryGameHours').value)||0,rating:Number($('#libraryGameRating').value)||0,routes,progress:progress==null?Number($('#libraryGameProgress').value)||0:progress,routeSelectionCustomized:true,routeDone:old.routeDone||[],logs:old.logs||[]};
+        saveGames(rows);
         const syncGameTimeline=(type,date)=>{const next=readTimelineEvents().filter(event=>!(String(event?.gameId||'')===String(id)&&event.type===type));if(date)next.push(normalizeTimelineEvent({id:backfillEventId(id,type),gameId:id,type,occurredAt:date,datePrecision:'day',title:timelineTypeLabel(type),source:'game-edit'}));writeTimelineEvents(next)};
-        syncGameTimeline('started',$('#libraryGameStartDate').value);syncGameTimeline('completed',$('#libraryGameCompleteDate').value);
-        saveGames(rows); updateProfileArchiveStats(); if(!$('#gameDetailPanel').hidden)renderGameDetail(id);
-      },0));
+        try{syncGameTimeline('started',$('#libraryGameStartDate')?.value||'');syncGameTimeline('completed',$('#libraryGameCompleteDate')?.value||'')}catch(error){console.warn('游玩时间同步失败',error)}
+        updateProfileArchiveStats(); if(!$('#gameDetailPanel').hidden)renderGameDetail(id);
+      });
       $('#deleteGameButton').addEventListener('click',()=>setTimeout(updateProfileArchiveStats,0));
       $$('[data-product-target="library"]').forEach(button=>button.addEventListener('click',()=>{localStorage.removeItem('amoristUi.libraryRoute.v1');if($('#gameDetailPanel')){$('#gameDetailPanel').hidden=true;$('#libraryBrowseView').hidden=false}},true));
       $$('[data-open-dashboard-game]').forEach(button=>button.addEventListener('click',event=>{
