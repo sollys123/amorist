@@ -1,6 +1,0 @@
-200 /
-200 /editor.html
-200 /index.html
-200 /assets/js/oshi-hub.js
-200 /assets/css/amorist.css
-200 /data/amorist-data.json
