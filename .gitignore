@@ -1,5 +1,6 @@
 # Local editor and development helpers (keep these out of GitHub Pages)
 editor.html
+assets/js/editor-tools.js
 serve.mjs
 serve.ps1
 start-*.bat

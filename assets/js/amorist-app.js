@@ -3290,7 +3290,7 @@ const routes=$('#libraryGameRoutes').value.split(/[，,]/).map(x=>x.trim()).filt
       };
       function setRepoReadonly(readonly){
         activeRepoReadonly=Boolean(readonly);
-        const root=$p('.product-view[data-product-view="studio"]');
+        const root=$('.product-view[data-product-view="studio"]');
         if(!root)return;
         root.classList.toggle('repo-readonly',activeRepoReadonly);
         // A game-specific REPO is a showcase: remove authoring controls while
