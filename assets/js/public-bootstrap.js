@@ -31,7 +31,7 @@
     'otomeRepoMaker.themeFavorites.v1': '[]',
     'otomeRepoMaker.colorStyle.v1': 'solid',
     'otomeRepoMaker.activePage.v1': 'full',
-    'amorist-timeline-events-v1': '{"version":1,"events":[]}',
+    'amorist-timeline-events-v1': '{"version":2,"events":[]}',
     'amorist-bangumi-deleted-v1': '[]',
     'amorist-product-view-v1': 'home'
   };
@@ -51,6 +51,13 @@
       if (!isManagedKey(key)) return;
       storage[key] = typeof raw === 'string' ? raw : JSON.stringify(raw);
     });
+    try {
+      const timeline=JSON.parse(storage['amorist-timeline-events-v1']||'[]');
+      const events=Array.isArray(timeline)?timeline:(Array.isArray(timeline?.events)?timeline.events:[]);
+      storage['amorist-timeline-events-v1']=JSON.stringify({version:2,events:events.filter(event=>['started','completed'].includes(String(event?.type||'')))});
+    } catch {
+      storage['amorist-timeline-events-v1']='{"version":2,"events":[]}';
+    }
     storage['amorist-product-view-v1'] = 'home';
     return {
       type: 'amorist-public-data',
@@ -164,8 +171,8 @@
     .then(async payload => {
       window.__AMORIST_PUBLIC_DATA__ = payload;
       installVirtualStorage(payload);
-      await loadScript('./assets/js/amorist-app.js?v=mode-boundaries-v11-20260728');
-      await loadScript('./assets/js/oshi-hub.js?v=mode-boundaries-v11-20260728');
-      await loadScript('./assets/js/public-mode.js?v=mode-boundaries-v11-20260728');
+      await loadScript('./assets/js/amorist-app.js?v=timeline-simple-v12-20260728');
+      await loadScript('./assets/js/oshi-hub.js?v=timeline-simple-v12-20260728');
+      await loadScript('./assets/js/public-mode.js?v=timeline-simple-v12-20260728');
     });
 })();

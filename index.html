@@ -705,14 +705,9 @@
     <form class="product-dialog timeline-record-dialog" id="timelineRecordForm">
       <div class="product-dialog-head"><div><span class="card-eyebrow">TIMELINE RECORD</span><h2 id="timelineRecordTitle">新增游玩记录</h2></div><button class="product-dialog-close" id="closeTimelineRecord" type="button" aria-label="关闭新增游玩记录">×</button></div>
       <div class="product-dialog-grid">
-        <div class="editor-group wide"><label for="timelineRecordType">记录类型</label><select class="product-select" id="timelineRecordType"><option value="session">今日游玩</option><option value="started">开始游玩</option><option value="progress">更新进度</option><option value="route_completed">路线通关</option><option value="completed">游戏全通</option><option value="paused">暂停／封盘</option><option value="rating">评分记录</option><option value="repo">REPO</option><option value="milestone">自定义事件</option></select></div>
+        <div class="editor-group wide"><label for="timelineRecordType">记录类型</label><select class="product-select" id="timelineRecordType"><option value="started">开始游玩</option><option value="completed">游戏全通</option></select></div>
         <div class="editor-group"><label for="timelineRecordDate">发生时间</label><input class="product-input" id="timelineRecordDate" placeholder="2026-07-27"></div>
         <div class="editor-group"><label for="timelineRecordPrecision">日期精度</label><select class="product-select" id="timelineRecordPrecision"><option value="day">精确日期</option><option value="month">只记得月份</option><option value="year">只记得年份</option><option value="unknown">日期不确定</option></select></div>
-        <div class="editor-group wide" id="timelineRecordRouteGroup"><label for="timelineRecordRoute">关联路线</label><select class="product-select" id="timelineRecordRoute"><option value="">不关联路线</option></select></div>
-        <div class="editor-group"><label for="timelineRecordProgress">当时进度</label><input class="product-input" id="timelineRecordProgress" type="number" min="0" max="100"></div>
-        <div class="editor-group"><label for="timelineRecordHours">本次游玩时长</label><input class="product-input" id="timelineRecordHours" type="number" min="0" step="0.5" placeholder="可选"></div>
-        <div class="editor-group wide"><label for="timelineRecordTitleInput">事件标题</label><input class="product-input" id="timelineRecordTitleInput" placeholder="例如：第一次通关"></div>
-        <div class="editor-group wide"><label for="timelineRecordNote">记录内容</label><textarea class="product-textarea" id="timelineRecordNote" placeholder="写下这次游玩的感受"></textarea></div>
       </div><input type="hidden" id="timelineRecordEventId"><input type="hidden" id="timelineRecordGameId">
       <div class="product-dialog-actions"><button class="product-button secondary" id="cancelTimelineRecord" type="button">取消</button><button class="product-button rose" type="submit">保存记录</button></div>
     </form>
@@ -725,11 +720,7 @@
       <section class="backfill-section"><h3>游戏阶段</h3><div class="product-dialog-grid">
         <div class="editor-group"><label>开始游玩</label><input class="product-input" id="timelineBackfillStartDate"><select class="product-select" id="timelineBackfillStartPrecision"><option value="day">精确日期</option><option value="month">只记月份</option><option value="year">只记年份</option><option value="unknown">不确定</option></select></div>
         <div class="editor-group"><label>游戏全通</label><input class="product-input" id="timelineBackfillCompleteDate"><select class="product-select" id="timelineBackfillCompletePrecision"><option value="day">精确日期</option><option value="month">只记月份</option><option value="year">只记年份</option><option value="unknown">不确定</option></select></div>
-        <div class="editor-group"><label>暂停／封盘</label><input class="product-input" id="timelineBackfillPausedDate"><select class="product-select" id="timelineBackfillPausedPrecision"><option value="day">精确日期</option><option value="month">只记月份</option><option value="year">只记年份</option><option value="unknown">不确定</option></select></div>
-        <div class="editor-group"><label>最终评分</label><input class="product-input" id="timelineBackfillRating" type="number" min="0" max="5" step="0.1"><label>累计时长</label><input class="product-input" id="timelineBackfillHours" type="number" min="0" step="0.5"></div>
-        <div class="editor-group wide"><label>补录备注</label><textarea class="product-textarea" id="timelineBackfillNote"></textarea></div>
       </div></section>
-      <section class="backfill-section"><div class="section-head"><h3>路线批量补录</h3><button type="button" class="product-button secondary small" id="timelineBackfillAddRoute">＋ 添加路线</button></div><div class="backfill-bulk-actions"><button type="button" class="product-button secondary small" id="timelineRoutesAllDone">全部通关</button><button type="button" class="product-button secondary small" id="timelineRoutesClearDone">清空完成</button><button type="button" class="product-button secondary small" id="timelineRoutesCopyDate">复制上一日期</button><button type="button" class="product-button secondary small" id="timelineRoutesClearDates">清空日期</button></div><div id="timelineBackfillRoutes"></div></section>
       <div class="product-dialog-actions"><button class="product-button secondary" id="cancelTimelineBackfill" type="button">取消</button><button class="product-button rose" type="submit">保存并继续</button></div>
     </form>
   </div>
@@ -949,6 +940,6 @@
   <script>window.AMORIST_MODE = 'public';</script>
   <script src="./assets/js/image-store.js"></script>
   <script src="./assets/js/data-model.js"></script>
-  <script src="./assets/js/public-bootstrap.js?v=mode-boundaries-v11-20260728"></script>
+  <script src="./assets/js/public-bootstrap.js?v=timeline-simple-v12-20260728"></script>
 </body>
 </html>
