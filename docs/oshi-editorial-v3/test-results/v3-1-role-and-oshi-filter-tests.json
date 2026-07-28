@@ -1,0 +1,77 @@
+{
+  "passed": true,
+  "timelineCases": [
+    {
+      "role": "all",
+      "useTimeline": true
+    },
+    {
+      "role": "protagonist",
+      "useTimeline": true
+    },
+    {
+      "role": "route",
+      "useTimeline": true
+    },
+    {
+      "role": "sub",
+      "useTimeline": true
+    },
+    {
+      "role": "unset",
+      "useTimeline": false
+    }
+  ],
+  "expectedTimeline": {
+    "all": true,
+    "protagonist": true,
+    "route": true,
+    "sub": true,
+    "unset": false
+  },
+  "syntheticIncluded": [
+    "route-favorite",
+    "route-oshi"
+  ],
+  "expectedSyntheticIncluded": [
+    "route-favorite",
+    "route-oshi"
+  ],
+  "realData": {
+    "previousEligible": 13,
+    "newEligible": 8,
+    "excludedCount": 5,
+    "excluded": [
+      {
+        "id": "char-bgm-454097-139175",
+        "name": "二角兽",
+        "roleType": "sub",
+        "preference": "oshi"
+      },
+      {
+        "id": "char-bgm-169077-54336",
+        "name": "有村乃亜",
+        "roleType": "sub",
+        "preference": "oshi"
+      },
+      {
+        "id": "char-bgm-117949-28807",
+        "name": "辉夜姬",
+        "roleType": "sub",
+        "preference": "oshi"
+      },
+      {
+        "id": "char-bgm-246055-133371",
+        "name": "平重衡",
+        "roleType": "sub",
+        "preference": "oshi"
+      },
+      {
+        "id": "char-bgm-17312",
+        "name": "真岛芳树",
+        "roleType": "unset",
+        "preference": "oshi"
+      }
+    ]
+  }
+}

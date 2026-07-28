@@ -1,0 +1,110 @@
+{
+  "requested": 1,
+  "result": {
+    "count": 1,
+    "layout": "oshi-collection is-archive layout-masonry",
+    "allNatural": true,
+    "ratios": [
+      {
+        "display": 0.7500088511240928,
+        "natural": 0.75,
+        "fit": "contain",
+        "figureAspect": "auto"
+      }
+    ]
+  },
+  "errors": []
+}
+{
+  "requested": 2,
+  "result": {
+    "count": 2,
+    "layout": "oshi-collection is-archive layout-archive",
+    "allNatural": true,
+    "ratios": [
+      {
+        "display": 0.75,
+        "natural": 0.75,
+        "fit": "contain",
+        "figureAspect": "auto"
+      },
+      {
+        "display": 0.7069622215332831,
+        "natural": 0.7069555302166477,
+        "fit": "contain",
+        "figureAspect": "auto"
+      }
+    ]
+  },
+  "errors": []
+}
+{
+  "requested": 3,
+  "result": {
+    "count": 3,
+    "layout": "oshi-collection is-archive layout-archive",
+    "allNatural": true,
+    "ratios": [
+      {
+        "display": 0.7500166544534008,
+        "natural": 0.75,
+        "fit": "contain",
+        "figureAspect": "auto"
+      },
+      {
+        "display": 0.7069717864161753,
+        "natural": 0.7069555302166477,
+        "fit": "contain",
+        "figureAspect": "auto"
+      },
+      {
+        "display": 0.7069579988675349,
+        "natural": 0.7069555302166477,
+        "fit": "contain",
+        "figureAspect": "auto"
+      }
+    ]
+  },
+  "errors": []
+}
+{
+  "requested": 5,
+  "result": {
+    "count": 5,
+    "layout": "oshi-collection is-archive layout-archive",
+    "allNatural": true,
+    "ratios": [
+      {
+        "display": 0.7500166544534008,
+        "natural": 0.75,
+        "fit": "contain",
+        "figureAspect": "auto"
+      },
+      {
+        "display": 0.7069717864161753,
+        "natural": 0.7069555302166477,
+        "fit": "contain",
+        "figureAspect": "auto"
+      },
+      {
+        "display": 0.7069579988675349,
+        "natural": 0.7069555302166477,
+        "fit": "contain",
+        "figureAspect": "auto"
+      },
+      {
+        "display": 1.7777897865441772,
+        "natural": 1.7777777777777777,
+        "fit": "contain",
+        "figureAspect": "auto"
+      },
+      {
+        "display": 1.7778318201469951,
+        "natural": 1.7777777777777777,
+        "fit": "contain",
+        "figureAspect": "auto"
+      }
+    ]
+  },
+  "errors": []
+}

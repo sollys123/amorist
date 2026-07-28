@@ -1,0 +1,36 @@
+{
+  "result": {
+    "migration": {
+      "stateVersion": 4,
+      "contentVersion": 3,
+      "noContain": true,
+      "uniqueIds": true
+    },
+    "publicRender": {
+      "detail": true,
+      "collectionCount": 3,
+      "imageCount": 18,
+      "blankCaptions": 0,
+      "blankQuotes": 0
+    },
+    "editorLoaded": true,
+    "layoutModes": {
+      "gallery": true,
+      "editorial": true,
+      "masonry": true,
+      "cinema": true,
+      "archive": true
+    },
+    "imageOrderSaved": true,
+    "heroSaved": true,
+    "itemControlsSaved": {
+      "priority": true,
+      "fit": true,
+      "focus": true,
+      "focusVisible": true
+    },
+    "collectionOrderSaved": true,
+    "profileCropSaved": true
+  },
+  "errors": []
+}
