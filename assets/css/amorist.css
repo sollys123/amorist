@@ -3059,8 +3059,6 @@ body[data-color-style="dark"] .star { color:color-mix(in srgb,var(--line) 42%,va
 
 /* Game-specific REPOs opened from the index are showcases, not editors. */
 .product-view[data-product-view="studio"].repo-readonly #paletteList,
-.product-view[data-product-view="studio"].repo-readonly #repoThemeInline,
-.product-view[data-product-view="studio"].repo-readonly #colorStyleSwitch,
 .product-view[data-product-view="studio"].repo-readonly #addLongPageBtn,
 .product-view[data-product-view="studio"].repo-readonly #archiveBtn,
 .product-view[data-product-view="studio"].repo-readonly #resetBtn {
@@ -4338,8 +4336,15 @@ body:not(.screenshot-mode) .product-view[data-product-view="studio"] .viewport{b
   .bangumi-db-manage-actions{display:grid!important;grid-template-columns:1fr!important;}
   .bangumi-db-manage-actions .product-button{width:100%;}
   .bangumi-single-search-row{grid-template-columns:1fr!important}.bangumi-single-result{grid-template-columns:34px minmax(0,1fr);}.bangumi-single-result .product-button{grid-column:2;width:max-content;}
-  .bangumi-char-modal,.image-modal-v24,.theme-backdrop{align-items:flex-end!important;padding:0!important;}
-  .bangumi-char-panel,.image-modal-panel-v24,.theme-panel{width:100%!important;max-width:none!important;max-height:90dvh!important;border-radius:20px 20px 0 0!important;overflow:auto!important;}
+  .bangumi-char-modal,#imageModal,.theme-backdrop{align-items:flex-end!important;padding:0!important;}
+  .bangumi-char-panel,.theme-panel{width:100%!important;max-width:none!important;max-height:90dvh!important;border-radius:20px 20px 0 0!important;overflow:auto!important;}
+  #imageModal .image-modal-v24{width:100%!important;max-width:none!important;height:min(760px,90dvh)!important;max-height:90dvh!important;border-radius:20px 20px 0 0!important;overflow:hidden!important;}
+  #imageModal .image-tabs{width:100%;min-width:0;overflow-x:auto;overflow-y:hidden;overscroll-behavior-inline:contain;scrollbar-width:none;}
+  #imageModal .image-tabs::-webkit-scrollbar{display:none;}
+  #imageModal .image-tabs .tab-btn{flex:0 0 auto;min-height:40px;white-space:nowrap;}
+  #imageModal :is(.search-bar,.url-row,.library-toolbar){grid-template-columns:minmax(0,1fr) auto;}
+  #imageModal :is(.modal-input,.search-btn){min-width:0;}
+  #imageModal .search-btn{min-height:42px;padding-inline:16px;}
 }
 
 @media (max-width:560px){

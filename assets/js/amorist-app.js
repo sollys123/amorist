@@ -726,6 +726,7 @@
       let cachedImageLibrary = [];
       let archiveView = 'active';
       let showOnlyFavoriteThemes = false;
+      let themeReturnFocus = null;
       let cropDrag = null;
       let lastSavedAt = Date.now();
       let activeRepoPage = 'full';
@@ -907,29 +908,41 @@
           const heading = document.createElement('h3'); heading.textContent = group.name; section.appendChild(heading);
           const grid = document.createElement('div'); grid.className = 'theme-grid';
           group.ids.map(id => palettes.find(p => p.id === id)).filter(Boolean).forEach(p => {
+            const shell = document.createElement('div');
+            shell.className = `theme-card-shell${showOnlyFavoriteThemes && !favorites.includes(p.id) ? ' hidden-by-filter' : ''}`;
             const card = document.createElement('button');
-            card.type = 'button'; card.className = `theme-card${p.id === state.palette ? ' active' : ''}${showOnlyFavoriteThemes && !favorites.includes(p.id) ? ' hidden-by-filter' : ''}`;
+            card.type = 'button'; card.className = `theme-card${p.id === state.palette ? ' active' : ''}`;
+            card.setAttribute('aria-pressed', String(p.id === state.palette));
             card.innerHTML = `<span class="theme-card-preview"><i style="background:${p.vars.paper}"></i><i style="background:${p.vars.primaryStrong}"></i><i style="background:${p.vars.accent}"></i></span><span class="theme-card-name">${escapeHtml(p.name)}</span>`;
             card.addEventListener('click', () => { applyPalette(p.id, true); renderThemePanel(); });
-            const fav = document.createElement('span'); fav.className = `theme-fav${favorites.includes(p.id) ? ' on' : ''}`; fav.textContent = favorites.includes(p.id) ? '★' : '☆'; fav.title = '收藏主题';
+            const fav = document.createElement('button'); fav.type = 'button'; fav.className = `theme-fav${favorites.includes(p.id) ? ' on' : ''}`; fav.textContent = favorites.includes(p.id) ? '★' : '☆'; fav.setAttribute('aria-label', `${favorites.includes(p.id) ? '取消收藏' : '收藏'}${p.name}`); fav.setAttribute('aria-pressed', String(favorites.includes(p.id)));
             fav.addEventListener('click', event => { event.preventDefault(); event.stopPropagation(); toggleThemeFavorite(p.id); });
-            card.appendChild(fav); grid.appendChild(card);
+            shell.append(card, fav); grid.appendChild(shell);
           });
           section.appendChild(grid); groupsBox.appendChild(section);
         });
         const filterBtn = $('#favoriteThemeFilter');
-        if (filterBtn) filterBtn.textContent = showOnlyFavoriteThemes ? '显示全部' : '只看收藏';
+        if (filterBtn) { filterBtn.textContent = showOnlyFavoriteThemes ? '显示全部' : '只看收藏'; filterBtn.setAttribute('aria-pressed', String(showOnlyFavoriteThemes)); }
       }
 
       function openThemePanel() {
         renderThemePanel();
-        const inline=$('#repoThemeInline');
-        if(inline)inline.hidden=false;
+        const backdrop=$('#themeBackdrop');
+        if(!backdrop)return;
+        themeReturnFocus=document.activeElement;
+        backdrop.classList.add('open');
+        backdrop.setAttribute('aria-hidden','false');
+        document.body.classList.add('theme-dialog-open');
+        requestAnimationFrame(()=>backdrop.querySelector('.theme-card.active,#closeTheme')?.focus());
       }
       function closeThemePanel() {
-        $('#themeBackdrop')?.classList.remove('open');
-        const inline=$('#repoThemeInline');
-        if(inline)inline.hidden=true;
+        const backdrop=$('#themeBackdrop');
+        if(!backdrop?.classList.contains('open'))return;
+        backdrop.classList.remove('open');
+        backdrop.setAttribute('aria-hidden','true');
+        document.body.classList.remove('theme-dialog-open');
+        if(themeReturnFocus instanceof HTMLElement)themeReturnFocus.focus();
+        themeReturnFocus=null;
       }
 
       function applyColorStyle(style, persist=false) {
@@ -1632,6 +1645,17 @@
       function activateImageTab(name) {
         $$('#imageModal .tab-btn').forEach(btn=>btn.classList.toggle('active',btn.dataset.tab===name));
         $$('#imageModal .tab-panel').forEach(panel=>panel.classList.toggle('active',panel.dataset.panel===name));
+        const tabStrip=$('#imageModal .image-tabs');
+        const activeTab=$(`#imageModal .tab-btn[data-tab="${name}"]`);
+        if(tabStrip&&activeTab) requestAnimationFrame(()=>{
+          if(name==='search'){ tabStrip.scrollLeft=0; return; }
+          const visibleStart=tabStrip.scrollLeft;
+          const visibleEnd=visibleStart+tabStrip.clientWidth;
+          const tabStart=activeTab.offsetLeft;
+          const tabEnd=tabStart+activeTab.offsetWidth;
+          if(tabStart<visibleStart) tabStrip.scrollLeft=tabStart;
+          else if(tabEnd>visibleEnd) tabStrip.scrollLeft=tabEnd-tabStrip.clientWidth;
+        });
         $('#modalStatus').textContent='';
         if(name==='library') renderImageLibrary($('#librarySearch')?.value||'');
         if(name==='crop') syncCropPanel();
@@ -2429,10 +2453,16 @@
         });
         $('#closeTheme').addEventListener('click',closeThemePanel);
         $('#themeBackdrop').addEventListener('click',event=>{if(event.target===$('#themeBackdrop'))closeThemePanel();});
+        $('#themeBackdrop').addEventListener('keydown',event=>{
+          if(event.key!=='Tab'||!$('#themeBackdrop').classList.contains('open'))return;
+          const focusable=$$('#themeBackdrop button:not([disabled]):not([hidden])').filter(node=>node.offsetParent!==null);
+          if(!focusable.length)return;
+          const first=focusable[0],last=focusable[focusable.length-1];
+          if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
+          else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+        });
         $('#randomThemeBtn').addEventListener('click',()=>{const options=showOnlyFavoriteThemes?palettes.filter(p=>themeFavorites().includes(p.id)):palettes;const pool=options.length?options:palettes;const pick=pool[Math.floor(Math.random()*pool.length)];applyPalette(pick.id,true);closeThemePanel();});
         $('#favoriteThemeFilter').addEventListener('click',()=>{showOnlyFavoriteThemes=!showOnlyFavoriteThemes;renderThemePanel();});
-        $('#repoRandomThemeBtn')?.addEventListener('click',()=>{const options=showOnlyFavoriteThemes?palettes.filter(p=>themeFavorites().includes(p.id)):palettes;const pool=options.length?options:palettes;const pick=pool[Math.floor(Math.random()*pool.length)];applyPalette(pick.id,true);renderThemePanel();});
-        $('#repoFavoriteThemeFilter')?.addEventListener('click',()=>{showOnlyFavoriteThemes=!showOnlyFavoriteThemes;renderThemePanel();});
         $$('.color-style-btn').forEach(button => button.addEventListener('click', () => applyColorStyle(button.dataset.colorStyle, true)));
         $('#resetBtn').addEventListener('click', resetAll);
         $('#screenshotBtn').addEventListener('click', enterScreenshotMode);
@@ -3265,7 +3295,7 @@ const routes=$('#libraryGameRoutes').value.split(/[，,]/).map(x=>x.trim()).filt
         root.classList.toggle('repo-readonly',activeRepoReadonly);
         // A game-specific REPO is a showcase: remove authoring controls while
         // retaining navigation and screenshot export for viewers.
-        ['#paletteList','#repoThemeInline','#colorStyleSwitch','#addLongPageBtn','#archiveBtn','#resetBtn'].forEach(selector=>{
+        ['#paletteList','#addLongPageBtn','#archiveBtn','#resetBtn'].forEach(selector=>{
           root.querySelectorAll(selector).forEach(node=>{ node.hidden=activeRepoReadonly; });
         });
         root.querySelectorAll('.persist').forEach(field=>{

@@ -408,15 +408,6 @@
         <span class="toolbar-status" id="saveStatus">当前为临时草稿 · 已自动保存</span>
       </div>
       <div class="toolbar-group" id="paletteList" aria-label="选择配色"></div>
-      <div class="repo-theme-inline" id="repoThemeInline" aria-label="主题配色选择">
-        <div class="repo-theme-inline-actions"><button class="tool-btn" id="repoRandomThemeBtn" type="button">随机</button><button class="tool-btn" id="repoFavoriteThemeFilter" type="button">收藏</button></div>
-        <div class="theme-groups" id="themeGroups"></div>
-      </div>
-      <div class="color-style-switch" id="colorStyleSwitch" role="group" aria-label="选择配色风格">
-        <button class="color-style-btn" type="button" data-color-style="gradient">渐变</button>
-        <button class="color-style-btn" type="button" data-color-style="solid">浅色</button>
-        <button class="color-style-btn" type="button" data-color-style="dark">深色</button>
-      </div>
       <div class="page-switch" id="pageSwitch" role="group" aria-label="选择 REPO 页面">
         <button class="page-switch-btn active" type="button" data-repo-page="full" aria-pressed="true">完整页</button>
         <div id="longPageButtons" class="long-page-buttons"></div>
@@ -922,16 +913,22 @@
     </aside>
   </div>
 
-  <div class="theme-backdrop" id="themeBackdrop" role="dialog" aria-modal="true" aria-labelledby="themeTitle">
-    <section class="theme-panel">
+  <div class="theme-backdrop" id="themeBackdrop" role="dialog" aria-modal="true" aria-labelledby="themeTitle" aria-hidden="true">
+    <section class="theme-panel" tabindex="-1">
       <div class="theme-head">
         <div><h2 id="themeTitle">选择主题</h2><p>主题按气质分组，并随当前风格切换。</p></div>
         <button class="icon-btn" id="closeTheme" type="button" aria-label="关闭">×</button>
+      </div>
+      <div class="color-style-switch" id="colorStyleSwitch" role="group" aria-label="选择配色风格">
+        <button class="color-style-btn" type="button" data-color-style="gradient">渐变</button>
+        <button class="color-style-btn" type="button" data-color-style="solid">浅色</button>
+        <button class="color-style-btn" type="button" data-color-style="dark">深色</button>
       </div>
       <div class="theme-actions">
         <button class="tool-btn" id="randomThemeBtn" type="button">随机主题</button>
         <button class="tool-btn" id="favoriteThemeFilter" type="button">只看收藏</button>
       </div>
+      <div class="theme-groups" id="themeGroups"></div>
     </section>
   </div>
 
