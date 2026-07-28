@@ -701,29 +701,6 @@
     </div>
   </div>
 
-  <div class="product-overlay timeline-dialog-overlay" id="timelineRecordOverlay" role="dialog" aria-modal="true">
-    <form class="product-dialog timeline-record-dialog" id="timelineRecordForm">
-      <div class="product-dialog-head"><div><span class="card-eyebrow">TIMELINE RECORD</span><h2 id="timelineRecordTitle">新增游玩记录</h2></div><button class="product-dialog-close" id="closeTimelineRecord" type="button" aria-label="关闭新增游玩记录">×</button></div>
-      <div class="product-dialog-grid">
-        <div class="editor-group wide"><label for="timelineRecordType">记录类型</label><select class="product-select" id="timelineRecordType"><option value="started">开始游玩</option><option value="completed">游戏全通</option></select></div>
-        <div class="editor-group"><label for="timelineRecordDate">发生时间</label><input class="product-input" id="timelineRecordDate" placeholder="2026-07-27"></div>
-        <div class="editor-group"><label for="timelineRecordPrecision">日期精度</label><select class="product-select" id="timelineRecordPrecision"><option value="day">精确日期</option><option value="month">只记得月份</option><option value="year">只记得年份</option><option value="unknown">日期不确定</option></select></div>
-      </div><input type="hidden" id="timelineRecordEventId"><input type="hidden" id="timelineRecordGameId">
-      <div class="product-dialog-actions"><button class="product-button secondary" id="cancelTimelineRecord" type="button">取消</button><button class="product-button rose" type="submit">保存记录</button></div>
-    </form>
-  </div>
-  <div class="product-overlay timeline-dialog-overlay" id="timelineBackfillOverlay" role="dialog" aria-modal="true">
-    <form class="product-dialog timeline-backfill-dialog" id="timelineBackfillForm">
-      <div class="product-dialog-head"><div><span class="card-eyebrow">HISTORY BACKFILL</span><h2 id="timelineBackfillTitle">历史补录</h2><p class="playing-meta" id="timelineBackfillGameName"></p></div><button class="product-dialog-close" id="closeTimelineBackfill" type="button" aria-label="关闭历史补录">×</button></div>
-      <div class="backfill-toolbar"><button type="button" class="product-button secondary small" id="timelineBackfillPrev">上一部</button><span id="timelineBackfillProgress">0 / 0</span><button type="button" class="product-button secondary small" id="timelineBackfillNext">下一部</button></div>
-      <input type="hidden" id="timelineBackfillGameId">
-      <section class="backfill-section"><h3>游戏阶段</h3><div class="product-dialog-grid">
-        <div class="editor-group"><label>开始游玩</label><input class="product-input" id="timelineBackfillStartDate"><select class="product-select" id="timelineBackfillStartPrecision"><option value="day">精确日期</option><option value="month">只记月份</option><option value="year">只记年份</option><option value="unknown">不确定</option></select></div>
-        <div class="editor-group"><label>游戏全通</label><input class="product-input" id="timelineBackfillCompleteDate"><select class="product-select" id="timelineBackfillCompletePrecision"><option value="day">精确日期</option><option value="month">只记月份</option><option value="year">只记年份</option><option value="unknown">不确定</option></select></div>
-      </div></section>
-      <div class="product-dialog-actions"><button class="product-button secondary" id="cancelTimelineBackfill" type="button">取消</button><button class="product-button rose" type="submit">保存并继续</button></div>
-    </form>
-  </div>
   <nav class="mobile-nav" aria-label="移动端主要导航">
     <button class="product-nav-btn active" type="button" data-product-target="home"><span class="product-nav-icon">⌂</span><span>首页</span></button>
     <button class="product-nav-btn" type="button" data-product-target="library"><span class="product-nav-icon">▦</span><span>游戏</span></button>
@@ -940,6 +917,6 @@
   <script>window.AMORIST_MODE = 'public';</script>
   <script src="./assets/js/image-store.js"></script>
   <script src="./assets/js/data-model.js"></script>
-  <script src="./assets/js/public-bootstrap.js?v=timeline-simple-v12-20260728"></script>
+  <script src="./assets/js/public-bootstrap.js?v=game-dates-v13-20260728"></script>
 </body>
 </html>

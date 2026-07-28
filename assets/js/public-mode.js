@@ -9,7 +9,7 @@
     '#bangumiDbManage','#bangumiDbSync','#bangumiDbDetailSync','#bangumiDbImportLocalJson','#bangumiDbExportJson',
     '#libraryCoverUploadButton','#charUploadButton','#charSearchButton',
     '#deleteGameButton','#deleteCharButton','#oshiEditButton','#oshiExportButton','#oshiImportButton','#oshiEditDetailButton','#oshiAddCollection',
-    '#timelineBackfillOpen','#timelineBackfillOverlay','#timelineRecordOverlay','.timeline-event-actions','[data-timeline-edit]','[data-timeline-delete]',
+    '.timeline-event-actions','[data-timeline-edit]','[data-timeline-delete]',
     '[data-detail-action="log"]','[data-detail-action="edit"]','#gameDetailPanel [data-route]','.game-log-delete','.game-log-date'
   ];
   const blockedSelector = blockedSelectors.join(',');
