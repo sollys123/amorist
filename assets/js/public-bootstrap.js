@@ -164,8 +164,8 @@
     .then(async payload => {
       window.__AMORIST_PUBLIC_DATA__ = payload;
       installVirtualStorage(payload);
-      await loadScript('./assets/js/amorist-app.js?v=editor-sync-v10-20260728');
-      await loadScript('./assets/js/oshi-hub.js?v=editor-sync-v10-20260728');
-      await loadScript('./assets/js/public-mode.js?v=editor-sync-v10-20260728');
+      await loadScript('./assets/js/amorist-app.js?v=mode-boundaries-v11-20260728');
+      await loadScript('./assets/js/oshi-hub.js?v=mode-boundaries-v11-20260728');
+      await loadScript('./assets/js/public-mode.js?v=mode-boundaries-v11-20260728');
     });
 })();

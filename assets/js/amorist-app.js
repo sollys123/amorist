@@ -3307,6 +3307,10 @@ const routes=$('#libraryGameRoutes').value.split(/[，,]/).map(x=>x.trim()).filt
            button.disabled=activeRepoReadonly;
            button.setAttribute('aria-disabled',String(activeRepoReadonly));
          });
+        root.querySelectorAll('.completion button,.choice-pill').forEach(button=>{
+          button.disabled=activeRepoReadonly;
+          button.setAttribute('aria-disabled',String(activeRepoReadonly));
+        });
         root.querySelectorAll('.image-picker').forEach(tile=>{
           tile.setAttribute('aria-disabled',String(activeRepoReadonly));
           tile.tabIndex=activeRepoReadonly?-1:0;
