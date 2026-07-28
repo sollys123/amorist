@@ -3056,6 +3056,27 @@ body[data-color-style="dark"] .star { color:color-mix(in srgb,var(--line) 42%,va
   scrollbar-width:thin;scrollbar-color:var(--product-line) transparent;
 }
 .product-view[data-product-view="studio"] .repo-theme-inline[hidden]{display:none!important}
+
+/* Game-specific REPOs opened from the index are showcases, not editors. */
+.product-view[data-product-view="studio"].repo-readonly #paletteList,
+.product-view[data-product-view="studio"].repo-readonly #repoThemeInline,
+.product-view[data-product-view="studio"].repo-readonly #colorStyleSwitch,
+.product-view[data-product-view="studio"].repo-readonly #addLongPageBtn,
+.product-view[data-product-view="studio"].repo-readonly #archiveBtn,
+.product-view[data-product-view="studio"].repo-readonly #resetBtn {
+  display:none!important;
+}
+.product-view[data-product-view="studio"].repo-readonly .long-page-delete {
+  display:none!important;
+}
+.product-view[data-product-view="studio"].repo-readonly .image-picker {
+  pointer-events:none!important;
+  cursor:default!important;
+}
+.product-view[data-product-view="studio"].repo-readonly .persist[readonly],
+.product-view[data-product-view="studio"].repo-readonly textarea[readonly] {
+  cursor:default!important;
+}
 .product-view[data-product-view="studio"] .repo-theme-inline-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px}
 .product-view[data-product-view="studio"] .repo-theme-inline-actions .tool-btn{min-height:32px!important;padding:6px 8px!important}
 .product-view[data-product-view="studio"] .repo-theme-inline .theme-recent{display:grid;gap:6px;margin:0 0 12px;padding:0}

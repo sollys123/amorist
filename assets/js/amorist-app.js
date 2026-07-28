@@ -1449,7 +1449,8 @@
           card.querySelector('.long-repo-page-number').value = String(index + 1).padStart(2,'0');
         });
         Object.entries(migrated.fields || {}).forEach(([key,value]) => { const field=document.querySelector(`[data-key="${CSS.escape(key)}"]`); if(field) field.value=value??''; });
-        renderPageSwitch(); renderState(); fitAllAdaptiveText(); updateLongRepoCount(); saveState();
+        renderPageSwitch(); renderState(); fitAllAdaptiveText(); updateLongRepoCount();
+        if (!window.AMORIST_REPO_READONLY_LOADING) saveState();
       }
 
       async function loadArchiveRecord(id) {
@@ -2512,6 +2513,9 @@
 
       function switchProductView(view, persist=true, sourceButton=null) {
         if (!productViews.has(view)) view = 'home';
+        if(view==='studio' && sourceButton?.closest('.product-sidebar,.mobile-nav,.mobile-more-sheet')){
+          window.amoristRepoManager?.enterEditor?.();
+        }
         if(persist)writeViewHash(view);
         const currentView=$p('.product-view.active')?.dataset.productView||'';
         if (currentView === view) {
@@ -2663,7 +2667,7 @@
             event.stopPropagation();
             const game = loadGames().find(item => String(item.id) === String(card.dataset.gameId));
             if (game) {
-              window.amoristRepoManager?.open?.(game);
+              window.amoristRepoManager?.open?.(game,window.AMORIST_MODE==='public'?{readonly:true}:{});
               productToast(`已把「${game.name || ''}」带入 REPO`);
             }
           });
@@ -3196,6 +3200,11 @@ const routes=$('#libraryGameRoutes').value.split(/[，,]/).map(x=>x.trim()).filt
 
       const GAME_REPO_KEY='amorist-game-repos-v1';
       let activeRepoGameId='';
+      // A repo opened from the game library is a saved showcase.  Keep this
+      // separate from the sidebar REPO editor so the showcase cannot mutate
+      // either the game snapshot or the user's general draft.
+      let activeRepoReadonly=false;
+      let editorRepoSnapshot=null;
       let activeRepoDirty=false;
       let activeRepoSaveTimer=0;
       let activeRepoSaveUsesIdle=false;
@@ -3203,14 +3212,14 @@ const routes=$('#libraryGameRoutes').value.split(/[，,]/).map(x=>x.trim()).filt
       function saveActiveGameRepo(force=false){
         if(activeRepoSaveTimer){if(activeRepoSaveUsesIdle&&window.cancelIdleCallback)cancelIdleCallback(activeRepoSaveTimer);else clearTimeout(activeRepoSaveTimer);}
         activeRepoSaveTimer=0;activeRepoSaveUsesIdle=false;
-        if(!activeRepoGameId||!window.amoristRepoBridge)return;
+        if(activeRepoReadonly||!activeRepoGameId||!window.amoristRepoBridge)return;
         if(!force&&!activeRepoDirty)return;
         activeRepoDirty=false;
         const map=gameRepoMap();map[activeRepoGameId]=window.amoristRepoBridge.getSnapshot();
         localStorage.setItem(GAME_REPO_KEY,JSON.stringify(map));window.amoristRepoBridge.save();
       }
       function scheduleActiveGameRepoSave(){
-        if(!activeRepoGameId)return;
+         if(activeRepoReadonly||!activeRepoGameId)return;
         activeRepoDirty=true;
         if(activeRepoSaveTimer){if(activeRepoSaveUsesIdle&&window.cancelIdleCallback)cancelIdleCallback(activeRepoSaveTimer);else clearTimeout(activeRepoSaveTimer);}
         const persist=()=>{activeRepoSaveTimer=0;activeRepoSaveUsesIdle=false;saveActiveGameRepo();};
@@ -3223,24 +3232,62 @@ const routes=$('#libraryGameRoutes').value.split(/[，,]/).map(x=>x.trim()).filt
         return {...base,palette:base.palette||'mintLavender',completion:'yes',platform:game.platform||'',language:'',ratings:zeroRatings,images:game.cover?{cover:game.cover}:{},imageTransforms:{},fields:{gameName:game.name,playTime:game.hours?`${game.hours}h`:''}};
       }
       window.amoristRepoManager={
-        open(game){
+        open(game, options={}){
+          const wasReadonly=activeRepoReadonly;
           saveActiveGameRepo(true);activeRepoGameId=game.id;
+           activeRepoReadonly=Boolean(options.readonly) && window.AMORIST_MODE === 'public';
+          if(activeRepoReadonly&&!wasReadonly) editorRepoSnapshot=window.amoristRepoBridge?.getSnapshot?.()||null;
           const stored=gameRepoMap()[game.id];
           const snapshot=stored?{...stored,images:{...(stored.images||{}),...(game.cover&&!stored.images?.cover?{cover:game.cover}:{})}}:newGameRepoSnapshot(game);
-          window.amoristRepoBridge?.setSnapshot(snapshot);
+           const previousReadonlyLoad=window.AMORIST_REPO_READONLY_LOADING;
+           window.AMORIST_REPO_READONLY_LOADING=activeRepoReadonly;
+           try { window.amoristRepoBridge?.setSnapshot(snapshot); }
+           finally { window.AMORIST_REPO_READONLY_LOADING=previousReadonlyLoad; }
           activeRepoDirty=false;
+          setRepoReadonly(activeRepoReadonly);
           window.amoristProductNavigate?.('studio');
+        },
+        enterEditor(){
+          saveActiveGameRepo(true);
+          activeRepoGameId='';
+          activeRepoReadonly=false;
+          if(editorRepoSnapshot) window.amoristRepoBridge?.setSnapshot(editorRepoSnapshot);
+          setRepoReadonly(false);
         },
         save:()=>saveActiveGameRepo(true),
         label:()=>{const game=games().find(item=>item.id===activeRepoGameId);return game?`REPO · ${game.name}`:''},
         hasActive:()=>Boolean(activeRepoGameId)
       };
+      function setRepoReadonly(readonly){
+        activeRepoReadonly=Boolean(readonly);
+        const root=$p('.product-view[data-product-view="studio"]');
+        if(!root)return;
+        root.classList.toggle('repo-readonly',activeRepoReadonly);
+        // A game-specific REPO is a showcase: remove authoring controls while
+        // retaining navigation and screenshot export for viewers.
+        ['#paletteList','#repoThemeInline','#colorStyleSwitch','#addLongPageBtn','#archiveBtn','#resetBtn'].forEach(selector=>{
+          root.querySelectorAll(selector).forEach(node=>{ node.hidden=activeRepoReadonly; });
+        });
+        root.querySelectorAll('.persist').forEach(field=>{
+          field.toggleAttribute('readonly',activeRepoReadonly && field.tagName!=='SELECT');
+          field.setAttribute('aria-readonly',String(activeRepoReadonly));
+        });
+         root.querySelectorAll('select').forEach(field=>{ field.disabled=activeRepoReadonly; });
+         root.querySelectorAll('.stars button').forEach(button=>{
+           button.disabled=activeRepoReadonly;
+           button.setAttribute('aria-disabled',String(activeRepoReadonly));
+         });
+        root.querySelectorAll('.image-picker').forEach(tile=>{
+          tile.setAttribute('aria-disabled',String(activeRepoReadonly));
+          tile.tabIndex=activeRepoReadonly?-1:0;
+        });
+      }
       document.addEventListener('input',event=>{
-        if(!activeRepoGameId||!event.target.closest('.product-view[data-product-view="studio"]'))return;
+        if(activeRepoReadonly||!activeRepoGameId||!event.target.closest('.product-view[data-product-view="studio"]'))return;
         scheduleActiveGameRepoSave();
       },true);
       document.addEventListener('click',event=>{
-        if(!activeRepoGameId)return;
+        if(activeRepoReadonly||!activeRepoGameId)return;
         const control=event.target.closest('.color-style-btn,.theme-card,.theme-current-btn,.page-switch-btn,.page-add-btn,.image-picker');
         if(control||event.target.closest('.product-view[data-product-view="studio"]'))scheduleActiveGameRepoSave();
       },true);
@@ -3250,7 +3297,9 @@ const routes=$('#libraryGameRoutes').value.split(/[，,]/).map(x=>x.trim()).filt
       });
       window.addEventListener('pagehide',()=>saveActiveGameRepo(true),{capture:true});
       function writeGameToRepo(game){
-        window.amoristRepoManager.open(game);
+        // Game detail pages are part of the public index and only showcase
+        // the saved repo.  The sidebar button remains the editing entrypoint.
+        window.amoristRepoManager.open(game,window.AMORIST_MODE==='public'?{readonly:true}:{});
         toast(`已打开「${game.name}」的 REPO`);
       }
 
