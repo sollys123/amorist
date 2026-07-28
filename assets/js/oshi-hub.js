@@ -241,7 +241,28 @@
   }
   function readImage(file) { return new Promise(resolve => { const reader = new FileReader(); reader.onload = () => { const image = new Image(); image.onload = () => resolve({src:reader.result,w:image.naturalWidth || 1000,h:image.naturalHeight || 1000,alt:file.name}); image.onerror = () => resolve({src:reader.result,w:1000,h:1000,alt:file.name}); image.src = reader.result; }; reader.readAsDataURL(file); }); }
   async function readImages(files) { return Promise.all([...files].map(readImage)); }
-  function setImage(img, fallback, src, label, onLoad) { if(!img)return; if (fallback) { fallback.textContent = ''; fallback.hidden = true; } img.hidden = !src; if (!src) { img.removeAttribute('src'); return; } const apply=resolved=>{if(!resolved){img.hidden=true;return;}img.onload=()=>{if(fallback)fallback.hidden=true;img.hidden=false;const figure=img.closest('.oshi-figure');if(figure&&img.naturalWidth&&img.naturalHeight)figure.style.setProperty('--oshi-ratio',String(img.naturalWidth/img.naturalHeight));onLoad?.(img,resolved);};img.onerror=()=>{if(fallback)fallback.hidden=true;img.hidden=true;};img.src=resolved;}; resolveImageSource(src).then(apply); }
+  function setImage(img, fallback, src, label, onLoad, isCurrent) {
+    if(!img)return;
+    if(fallback){fallback.textContent='';fallback.hidden=true;}
+    // Clear the previous person's image synchronously. The new source may
+    // resolve later, so the old bitmap must never remain visible meanwhile.
+    img.hidden=true;img.removeAttribute('src');img.onload=null;img.onerror=null;
+    if(!src)return;
+    const apply=resolved=>{
+      if(isCurrent&&!isCurrent())return;
+      if(!resolved){img.hidden=true;return;}
+      img.onload=()=>{
+        if(isCurrent&&!isCurrent())return;
+        if(fallback)fallback.hidden=true;img.hidden=false;
+        const figure=img.closest('.oshi-figure');
+        if(figure&&img.naturalWidth&&img.naturalHeight)figure.style.setProperty('--oshi-ratio',String(img.naturalWidth/img.naturalHeight));
+        onLoad?.(img,resolved);
+      };
+      img.onerror=()=>{if(isCurrent&&!isCurrent())return;if(fallback)fallback.hidden=true;img.hidden=true;};
+      img.src=resolved;
+    };
+    resolveImageSource(src).then(apply);
+  }
   function hydrateOshiImages(root) {
     if(!root)return;
     root.querySelectorAll('[data-oshi-image-ref]').forEach(node=>{
@@ -576,7 +597,7 @@
     const cvLabel=$('oshiProfileCv')?.previousElementSibling,gameLabel=$('oshiProfileGame')?.previousElementSibling,sinceLabel=$('oshiProfileSince')?.previousElementSibling;
     if(cvLabel)cvLabel.textContent=entry.voiceLabel;if(gameLabel)gameLabel.textContent=entry.fromLabel;if(sinceLabel)sinceLabel.textContent=entry.sinceLabel;
     setText('oshiReasonEyebrow',entry.reasonEyebrow);setText('oshiReasonTitle',entry.reasonTitle);setText('oshiFactsEyebrow',entry.factsEyebrow);setText('oshiFactsTitle',entry.factsTitle);
-    const profileImage=$('oshiProfileImage'),detailToken=++detailImageToken;setImage(profileImage,null,entry.image,entry.name,(image,resolved)=>{if(detailToken===detailImageToken&&String(activeId||entry.id)===String(entry.id))applyProfilePresentation(entry,image,resolved);});
+    const profileImage=$('oshiProfileImage'),detailToken=++detailImageToken,isCurrent=()=>detailToken===detailImageToken&&String(activeId||entry.id)===String(entry.id);setImage(profileImage,null,entry.image,entry.name,(image,resolved)=>{if(isCurrent())applyProfilePresentation(entry,image,resolved);},isCurrent);
     if(!entry.image&&detailToken===detailImageToken)applyProfilePresentation(entry,null,'');
     setText('oshiProfileImageCredit',entry.imageCredit);
     const leadNode=$('oshiReviewLead');if(leadNode){leadNode.textContent=lead;leadNode.hidden=!lead;}
