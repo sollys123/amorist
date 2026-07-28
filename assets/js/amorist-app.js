@@ -3137,9 +3137,10 @@
       function writeTimelineEvents(events){localStorage.setItem(TIMELINE_KEY,JSON.stringify({version:2,events:canonicalizeTimelineEvents(events)}));window.dispatchEvent(new CustomEvent('amorist-data-changed',{detail:{timeline:true}}));}
       function migrateTimelineData(){
         const current=readTimelineEventsRaw(),canonical=canonicalizeTimelineEvents(current);
-        if(JSON.stringify(current)!==JSON.stringify(canonical)||localStorage.getItem(TIMELINE_MIGRATION_KEY)!=='2')writeTimelineEvents(canonical);
         const gameRows=games(),cleanedGames=gameRows.map(game=>({...game,logs:(Array.isArray(game.logs)?game.logs:[]).filter(log=>!/^(?:通关路线|取消标记)\s*[：:]/.test(String(log?.text||'').trim()))}));
         if(gameRows.some((game,index)=>(game.logs||[]).length!==cleanedGames[index].logs.length))saveGames(cleanedGames);
+        const synced=gameRows.reduce((events,game)=>['started','completed'].reduce((rows,type)=>{const date=type==='started'?game.startedAt:game.completedAt;if(!date)return rows;const existing=rows.find(event=>event.gameId===String(game.id)&&event.type===type);if(existing){existing.occurredAt=date;existing.datePrecision='day';}else rows.push(normalizeTimelineEvent({id:backfillEventId(game.id,type),gameId:game.id,type,occurredAt:date,datePrecision:'day',title:timelineTypeLabel(type),source:'game-edit'}));return rows},events),canonical.map(event=>({...event})));
+        if(JSON.stringify(current)!==JSON.stringify(synced)||localStorage.getItem(TIMELINE_MIGRATION_KEY)!=='2')writeTimelineEvents(synced);
         localStorage.setItem(TIMELINE_MIGRATION_KEY,'2');
       }
       function timelineGameName(id){return games().find(game=>String(game.id)===String(id))?.name||'未知作品';}
@@ -3400,7 +3401,8 @@ const routes=$('#libraryGameRoutes').value.split(/[，,]/).map(x=>x.trim()).filt
         const done=Array.isArray(game.routeDone)?game.routeDone:[];
         const calculatedProgress=gameRouteProgress(routes,done);
         if(calculatedProgress!=null&&Number(game.progress)!==calculatedProgress){const rows=games(),index=rows.findIndex(row=>row.id===id);if(index>=0){rows[index]={...rows[index],progress:calculatedProgress};saveGames(rows);game={...game,progress:calculatedProgress};}}
-        const timeEvents=readTimelineEvents().map(normalizeTimelineEvent).filter(event=>event.gameId===String(game.id)&&['started','completed'].includes(event.type)).sort((a,b)=>eventSortValue(b)-eventSortValue(a));
+        const storedTimeEvents=readTimelineEvents().map(normalizeTimelineEvent).filter(event=>event.gameId===String(game.id)&&['started','completed'].includes(event.type));
+        const timeEvents=['started','completed'].map(type=>{const existing=storedTimeEvents.find(event=>event.type===type),date=type==='started'?game.startedAt:game.completedAt;if(!existing&&!date)return null;return normalizeTimelineEvent({...existing,id:existing?.id||backfillEventId(game.id,type),gameId:game.id,type,occurredAt:date||existing?.occurredAt||'',datePrecision:date?'day':existing?.datePrecision||'unknown',title:timelineTypeLabel(type)})}).filter(Boolean).sort((a,b)=>eventSortValue(b)-eventSortValue(a));
         const logRowsHtml=timeEvents.length?timeEvents.map(event=>`<div class="game-log game-log-public"><time>${safe(timelineDateLabel(event))}</time><span>${safe(timelineTypeLabel(event.type))}</span>${window.AMORIST_MODE==='editor'?`<button class="game-log-delete" type="button" data-time-event="${safe(event.id)}">编辑</button>`:''}</div>`).join(''):'<span class="playing-meta">只记录开始游玩和游戏全通时间。</span>';
         $('#gameDetailPanel').innerHTML=`
           <section class="game-detail-hero"><button class="game-detail-back" type="button">返回游戏档案</button><div class="game-detail-cover">${game.cover?`<img src="${safe(game.cover)}" alt="${safe(game.name)}" referrerpolicy="no-referrer">`:safe(initial(game.name))}</div><div class="game-detail-copy"><div class="card-eyebrow">${safe(game.status)} · ${safe(game.platform||'平台未记录')}</div><h2>${safe(game.name)}</h2><p>${safe(game.note||'这部作品还没有写下一句话记录。')}</p><div class="game-detail-actions"><button class="product-button" type="button" data-detail-action="repo">REPO</button>${window.AMORIST_MODE==='editor'?'<button class="product-button secondary" type="button" data-detail-action="edit">编辑档案</button>':''}</div></div></section>
