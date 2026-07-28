@@ -2724,8 +2724,8 @@
         $p('#libraryGameRoutes').value = Array.isArray(game?.routes) ? game.routes.join('，') : (game?.routes || '');
         const timeline=window.AmoristTimelineStore?.read?.()||[];
         const startDateField=$p('#libraryGameStartDate'),completeDateField=$p('#libraryGameCompleteDate');
-        if(startDateField)startDateField.value = timeline.find(event=>String(event?.gameId||'')===String(game?.id||'')&&event.type==='started')?.occurredAt || '';
-        if(completeDateField)completeDateField.value = timeline.find(event=>String(event?.gameId||'')===String(game?.id||'')&&event.type==='completed')?.occurredAt || '';
+        if(startDateField)startDateField.value = game?.startedAt || timeline.find(event=>String(event?.gameId||'')===String(game?.id||'')&&event.type==='started')?.occurredAt || '';
+        if(completeDateField)completeDateField.value = game?.completedAt || timeline.find(event=>String(event?.gameId||'')===String(game?.id||'')&&event.type==='completed')?.occurredAt || '';
         $p('#deleteGameButton').hidden = !game;
         $p('#gameDialogOverlay').classList.add('open');
         setTimeout(() => $p('#libraryGameName').focus(), 30);
@@ -2739,7 +2739,7 @@
         const games = loadGames();
         const id = $p('#editingGameId').value;
         const routes=$p('#libraryGameRoutes').value.split(/[，,]/).map(value=>value.trim()).filter(Boolean);
-        const record = { id:id || `game-${Date.now()}`, name:$p('#libraryGameName').value.trim(), status:$p('#libraryGameStatus').value, category:dataModel.normalizeGameCategory($p('#libraryGameCategory').value), progress:Math.max(0,Math.min(100,Number($p('#libraryGameProgress').value)||0)), cover:$p('#libraryGameCover').value.trim(), note:$p('#libraryGameNote').value.trim(), platform:$p('#libraryGamePlatform').value.trim(), hours:Number($p('#libraryGameHours').value)||0, rating:Number($p('#libraryGameRating').value)||0, routes, routeDone:Array.isArray(games.find(item=>String(item.id)===String(id))?.routeDone)?games.find(item=>String(item.id)===String(id)).routeDone:[], logs:games.find(item=>String(item.id)===String(id))?.logs||[], updatedAt:Date.now() };
+        const record = { id:id || `game-${Date.now()}`, name:$p('#libraryGameName').value.trim(), status:$p('#libraryGameStatus').value, category:dataModel.normalizeGameCategory($p('#libraryGameCategory').value), progress:Math.max(0,Math.min(100,Number($p('#libraryGameProgress').value)||0)), cover:$p('#libraryGameCover').value.trim(), note:$p('#libraryGameNote').value.trim(), platform:$p('#libraryGamePlatform').value.trim(), hours:Number($p('#libraryGameHours').value)||0, rating:Number($p('#libraryGameRating').value)||0, routes, startedAt:$p('#libraryGameStartDate')?.value||'', completedAt:$p('#libraryGameCompleteDate')?.value||'', routeDone:Array.isArray(games.find(item=>String(item.id)===String(id))?.routeDone)?games.find(item=>String(item.id)===String(id)).routeDone:[], logs:games.find(item=>String(item.id)===String(id))?.logs||[], updatedAt:Date.now() };
         const index = games.findIndex(item => String(item.id) === String(id));
         if (index >= 0) games[index] = record; else games.push(record);
         saveGames(games); closeGameDialog(); renderGameLibrary(); renderDashboard(); productToast('游戏记录已保存');
@@ -3194,8 +3194,8 @@
         $('#libraryGameRating').value=game?.rating??'';
         $('#libraryGameRoutes').value=Array.isArray(game?.routes)?game.routes.join('，'):(game?.routes||'');
         const gameTimeline=readTimelineEvents().filter(event=>String(event?.gameId||'')===String(game?.id||''));
-        $('#libraryGameStartDate').value=gameTimeline.find(event=>event.type==='started')?.occurredAt||'';
-        $('#libraryGameCompleteDate').value=gameTimeline.find(event=>event.type==='completed')?.occurredAt||'';
+        $('#libraryGameStartDate').value=game?.startedAt||gameTimeline.find(event=>event.type==='started')?.occurredAt||'';
+        $('#libraryGameCompleteDate').value=game?.completedAt||gameTimeline.find(event=>event.type==='completed')?.occurredAt||'';
         $('#deleteGameButton').hidden=!game;
         $('#gameDialogOverlay').classList.add('open');
       }
@@ -3208,7 +3208,7 @@
         const rows=games(), id=$('#editingGameId').value || rows.at(-1)?.id, index=rows.findIndex(g=>g.id===id);
         if(index<0)return;
         const old=rows[index];
-const routes=$('#libraryGameRoutes').value.split(/[，,]/).map(x=>x.trim()).filter(Boolean),progress=gameRouteProgress(routes,old.routeDone||[]);rows[index]={...old,category:dataModel.normalizeGameCategory($('#libraryGameCategory').value),platform:$('#libraryGamePlatform').value.trim(),hours:Number($('#libraryGameHours').value)||0,rating:Number($('#libraryGameRating').value)||0,routes,progress:progress==null?Number($('#libraryGameProgress').value)||0:progress,routeSelectionCustomized:true,routeDone:old.routeDone||[],logs:old.logs||[]};
+const routes=$('#libraryGameRoutes').value.split(/[，,]/).map(x=>x.trim()).filter(Boolean),progress=gameRouteProgress(routes,old.routeDone||[]);rows[index]={...old,category:dataModel.normalizeGameCategory($('#libraryGameCategory').value),platform:$('#libraryGamePlatform').value.trim(),hours:Number($('#libraryGameHours').value)||0,rating:Number($('#libraryGameRating').value)||0,routes,startedAt:$('#libraryGameStartDate')?.value||'',completedAt:$('#libraryGameCompleteDate')?.value||'',progress:progress==null?Number($('#libraryGameProgress').value)||0:progress,routeSelectionCustomized:true,routeDone:old.routeDone||[],logs:old.logs||[]};
         saveGames(rows);
         const syncGameTimeline=(type,date)=>{const next=readTimelineEvents().filter(event=>!(String(event?.gameId||'')===String(id)&&event.type===type));if(date)next.push(normalizeTimelineEvent({id:backfillEventId(id,type),gameId:id,type,occurredAt:date,datePrecision:'day',title:timelineTypeLabel(type),source:'game-edit'}));writeTimelineEvents(next)};
         try{syncGameTimeline('started',$('#libraryGameStartDate')?.value||'');syncGameTimeline('completed',$('#libraryGameCompleteDate')?.value||'')}catch(error){console.warn('游玩时间同步失败',error)}
