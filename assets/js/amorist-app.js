@@ -125,7 +125,9 @@
     if(!result)return;
     try{localStorage.setItem(`${RESULT_KEY}.${date}`,JSON.stringify({date,result,hasDrawn:true}))}catch{}
   }
-  let dailyResult=null,isRevealed=localStorage.getItem(openedKey())==='1';
+  // Keep the result collapsed on every page load. Drawing can reveal it for
+  // the current session, while a refresh returns to the quieter sealed state.
+  let dailyResult=null,isRevealed=false;
   function updateView(animate=false){
     const sealed=$('homeOmikujiSealed'),panel=$('homeOmikujiResult'),collapse=$('homeOmikujiCollapse');
     if(!dailyResult){sealed.hidden=true;panel.hidden=false;collapse.hidden=true;setText('homeOmikujiName','');setText('homeOmikujiWork','');setText('homeOmikujiGrade','');setText('homeOmikujiMessage','今日はまだ、誰も来ていません。');setText('homeOmikujiAttribution','');$('homeOmikujiOpen').hidden=true;return}
