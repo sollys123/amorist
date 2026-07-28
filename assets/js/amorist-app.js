@@ -3674,12 +3674,15 @@ const routes=$('#libraryGameRoutes').value.split(/[，,]/).map(x=>x.trim()).filt
         }
         const sorted=filtered.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
         const cardMarkup=c=>{
-          const game=gameMap[c.gameId],workName=game?.name||'未知作品';
-          const preferenceClass=c.preference==='favorite'?'best':'';
-          const roleLabel=dataModel.characterRoleTypeLabel(c.roleType),preferenceLabel=dataModel.characterPreferenceLabel(c.preference);
-          return `<article class="char-card${charBatchMode?' batch-mode':''}" data-char-id="${safe(c.id)}" tabindex="0">
-            ${charBatchMode?`<input class="batch-select" type="checkbox" data-batch-char="${safe(c.id)}" ${charSelected.has(String(c.id))?'checked':''} aria-label="选择${safe(c.name)}">`:''}
-            <div class="char-quick-actions"><button class="char-quick-btn" data-char-action="edit" title="编辑">✎</button><button class="char-quick-btn" data-char-action="use" title="用于图文">✦</button></div>
+           const game=gameMap[c.gameId],workName=game?.name||'未知作品';
+           const preferenceClass=c.preference==='favorite'?'best':'';
+           const roleLabel=dataModel.characterRoleTypeLabel(c.roleType),preferenceLabel=dataModel.characterPreferenceLabel(c.preference);
+           const quickActions=window.AMORIST_MODE==='editor'
+             ? '<div class="char-quick-actions"><button class="char-quick-btn" data-char-action="edit" title="编辑角色档案">✎</button></div>'
+             : '';
+           return `<article class="char-card${charBatchMode?' batch-mode':''}" data-char-id="${safe(c.id)}" tabindex="0">
+             ${charBatchMode?`<input class="batch-select" type="checkbox" data-batch-char="${safe(c.id)}" ${charSelected.has(String(c.id))?'checked':''} aria-label="选择${safe(c.name)}">`:''}
+             ${quickActions}
             <div class="char-cover">${c.image?`<img src="${safe(c.image)}" alt="${safe(c.name)}" referrerpolicy="no-referrer">`:safe(initial(c.name))}</div>
             <div class="char-card-body"><strong>${safe(c.nameCn||c.name)}</strong><span class="char-game-name">${safe(workName)}</span><div class="char-tags"><span class="char-tag char-role-tag">${safe(roleLabel)}</span><span class="char-tag ${preferenceClass}">${safe(preferenceLabel)}</span>${c.cv?`<span class="char-tag">${safe(c.cv)}</span>`:''}</div></div>
           </article>`;
@@ -3704,7 +3707,6 @@ const routes=$('#libraryGameRoutes').value.split(/[，,]/).map(x=>x.trim()).filt
             }
             const action=e.target.closest('[data-char-action]');
             if(action?.dataset.charAction==='edit'){e.stopPropagation();openCharDialog(card.dataset.charId);return;}
-            if(action?.dataset.charAction==='use'){e.stopPropagation();go('forms');setTimeout(()=>openVisualTemplate('char9','',card.dataset.charId),30);return;}
             const record=chars().find(c=>String(c.id)===String(card.dataset.charId));
             if(record?.bangumiCharacterId){window.dispatchEvent(new CustomEvent('amorist-open-character',{detail:record.bangumiCharacterId}));return;}
             openCharDialog(card.dataset.charId);
