@@ -2737,7 +2737,7 @@ body[data-color-style="dark"] .star { color:color-mix(in srgb,var(--line) 42%,va
 .bangumi-char-note{margin-top:18px;padding-top:15px;border-top:1px solid var(--product-line)}
 .bangumi-char-note h3{margin:0 0 8px;font:500 16px Georgia,"Noto Serif SC",serif;color:var(--product-ink)}
 .bangumi-char-note p{margin:0;color:var(--product-ink);font-size:13px;line-height:1.8;white-space:pre-wrap}
-.bangumi-char-copy .bangumi-char-note{margin-top:24px;padding-top:14px;min-height:72px}
+.bangumi-char-copy .bangumi-char-note{margin-top:24px;padding-top:14px;min-height:0;color:var(--product-ink);font-size:13px;line-height:1.8;white-space:pre-wrap}
 .bangumi-char-section{margin-top:22px;padding-top:16px;border-top:1px solid var(--product-line)}
 .bangumi-char-section h3{margin:0 0 9px;font:500 16px Georgia,"Noto Serif SC",serif;color:var(--product-ink)}
 .bangumi-char-section p,.bangumi-char-infobox{color:var(--product-ink);font-size:13px;line-height:1.75;white-space:pre-wrap}

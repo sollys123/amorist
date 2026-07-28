@@ -4838,8 +4838,8 @@ const routes=$('#libraryGameRoutes').value.split(/[，,]/).map(x=>x.trim()).filt
           saveChars(allCharacterRows);
           window.dispatchEvent(new CustomEvent('amorist-data-changed',{detail:{chars:true}}));
         }
-        const sharedNote=shared?.note||'';
-        body.innerHTML='<div class="bangumi-char-hero"><div class="bangumi-char-image">'+(image?'<img src="'+safe(image)+'" alt="" referrerpolicy="no-referrer">':safe(title).slice(0,1))+'</div><div class="bangumi-char-copy"><h2 id="bangumiCharTitle">'+safe(title)+'</h2>'+relationLinks+'<p>'+safe(s.name_cn||'')+'</p><section class="bangumi-char-note"><h3>我的感想</h3><p>'+safe(sharedNote||'还没有写下感想。可以在角色图鉴中编辑备注。')+'</p></section></div></div>'
+        const sharedNote=String(shared?.note||'').trim(),noteSection=sharedNote?'<p class="bangumi-char-note">'+safe(sharedNote)+'</p>':'';
+        body.innerHTML='<div class="bangumi-char-hero"><div class="bangumi-char-image">'+(image?'<img src="'+safe(image)+'" alt="" referrerpolicy="no-referrer">':safe(title).slice(0,1))+'</div><div class="bangumi-char-copy"><h2 id="bangumiCharTitle">'+safe(title)+'</h2>'+relationLinks+'<p>'+safe(s.name_cn||'')+'</p>'+noteSection+'</div></div>'
           +(s.summary?'<section class="bangumi-char-section"><h3>角色简介</h3><p>'+safe(s.summary)+'</p></section>':'')
           +(info?'<section class="bangumi-char-section"><h3>角色资料</h3><div class="bangumi-char-infobox">'+info+'</div></section>':'');
       }catch(e){body.innerHTML='<div style="padding:35px;text-align:center;color:var(--product-muted)">角色资料加载失败：'+safe(e.message)+'</div>';}
