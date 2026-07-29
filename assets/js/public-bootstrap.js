@@ -171,8 +171,8 @@
     .then(async payload => {
       window.__AMORIST_PUBLIC_DATA__ = payload;
       installVirtualStorage(payload);
-      await loadScript('./assets/js/amorist-app.js?v=game-dates-v17-20260728');
-      await loadScript('./assets/js/oshi-hub.js?v=game-dates-v17-20260728');
-      await loadScript('./assets/js/public-mode.js?v=game-dates-v17-20260728');
+      await loadScript('./assets/js/amorist-app.js?v=game-dates-v18-20260729');
+      await loadScript('./assets/js/oshi-hub.js?v=game-dates-v18-20260729');
+      await loadScript('./assets/js/public-mode.js?v=game-dates-v18-20260729');
     });
 })();

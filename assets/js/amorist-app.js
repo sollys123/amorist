@@ -2514,6 +2514,7 @@
         : 'amoristUi.productView.v1';
       const PRODUCT_SESSION_KEY = 'amorist-product-session-v1';
       const LIBRARY_ROUTE_KEY = 'amoristUi.libraryRoute.v1';
+      let libraryBrowseScrollY = 0;
       const GAME_LIBRARY_KEY = 'amorist-game-library-v1';
       const DASHBOARD_PLAYING_KEY = 'amorist-dashboard-playing-v1';
       const PROFILE_KEY = 'amorist-profile-v1';
@@ -3397,6 +3398,9 @@ const routes=$('#libraryGameRoutes').value.split(/[，,]/).map(x=>x.trim()).filt
 
       function renderGameDetail(id){
         let game=games().find(g=>g.id===id);if(!game)return;
+        if(!$('#libraryBrowseView').hidden){
+          libraryBrowseScrollY=window.scrollY||document.documentElement.scrollTop||0;
+        }
         localStorage.setItem('amoristUi.libraryRoute.v1',JSON.stringify({screen:'detail',id:String(id)}));
         $('#libraryBrowseView').hidden=true;$('#gameDetailPanel').hidden=false;
         const routes=gameRouteNames(game);
@@ -3409,7 +3413,7 @@ const routes=$('#libraryGameRoutes').value.split(/[，,]/).map(x=>x.trim()).filt
         $('#gameDetailPanel').innerHTML=`
           <section class="game-detail-hero"><button class="game-detail-back" type="button">返回游戏档案</button><div class="game-detail-cover">${game.cover?`<img src="${safe(game.cover)}" alt="${safe(game.name)}" referrerpolicy="no-referrer">`:safe(initial(game.name))}</div><div class="game-detail-copy"><div class="card-eyebrow">${safe(game.status)} · ${safe(game.platform||'平台未记录')}</div><h2>${safe(game.name)}</h2><p>${safe(game.note||'这部作品还没有写下一句话记录。')}</p><div class="game-detail-actions"><button class="product-button" type="button" data-detail-action="repo">REPO</button>${window.AMORIST_MODE==='editor'?'<button class="product-button secondary" type="button" data-detail-action="edit">编辑档案</button>':''}</div></div></section>
           <div class="game-detail-grid"><section class="product-card game-detail-section"><h3>作品进度</h3><div class="detail-stats"><div class="detail-stat"><span>PROGRESS</span><strong>${Number(game.progress)||0}%</strong></div><div class="detail-stat"><span>PLAY TIME</span><strong>${Number(game.hours)||0}h</strong></div><div class="detail-stat"><span>MY RATING</span><strong>${Number(game.rating)?Number(game.rating).toFixed(1):'—'} / 5</strong></div></div><div class="section-head game-route-head"><h3>角色路线</h3>${window.AMORIST_MODE==='editor'?'<button class="product-button secondary small" data-detail-action="edit-routes" type="button">编辑角色</button>':''}</div><div class="route-list">${routes.length?routes.map(route=>window.AMORIST_MODE==='editor'?`<button class="route-chip ${done.includes(route)?'done':''}" data-route="${safe(route)}" type="button">${done.includes(route)?'已通 ':''}${safe(route)}</button>`:`<span class="route-chip ${done.includes(route)?'done':''}">${done.includes(route)?'已通 ':''}${safe(route)}</span>`).join(''):'<span class="playing-meta">作品资料中没有可记录通关的主角。</span>'}</div>${window.AMORIST_MODE==='editor'?'<div id="gameRouteEditor" class="game-route-editor" hidden></div>':''}</section><section class="product-card game-detail-section"><div class="section-head"><h3>游玩时间</h3>${window.AMORIST_MODE==='editor'?'<button class="product-button secondary small" data-detail-action="log" type="button">记录时间</button>':''}</div><div class="game-log-list">${logRowsHtml}</div></section></div><section class="product-card game-detail-section game-source-section" id="gameSourceInfo"><div class="section-head"><h3>作品资料</h3><span class="playing-meta">来自作品资料库</span></div><div class="playing-meta">正在读取作品资料…</div></section>`;
-         $('#gameDetailPanel .game-detail-back').onclick=()=>{localStorage.removeItem('amoristUi.libraryRoute.v1');$('#gameDetailPanel').hidden=true;$('#libraryBrowseView').hidden=false};
+         $('#gameDetailPanel .game-detail-back').onclick=()=>{localStorage.removeItem('amoristUi.libraryRoute.v1');$('#gameDetailPanel').hidden=true;$('#libraryBrowseView').hidden=false;requestAnimationFrame(()=>window.scrollTo({top:libraryBrowseScrollY,behavior:'auto'}));};
         $('#gameDetailPanel [data-detail-action="repo"]').onclick=()=>writeGameToRepo(game);
         $('#gameDetailPanel [data-detail-action="edit"]')?.addEventListener('click',()=>openEnhancedGameDialog(game));
         $('#gameDetailPanel [data-detail-action="edit-routes"]')?.addEventListener('click',()=>renderGameRouteEditor(id,game));
