@@ -27,9 +27,9 @@
 
 
 
-  <link rel="stylesheet" href="./assets/css/amorist.css?v=calendar-v1-20260729">
+  <link rel="stylesheet" href="./assets/css/amorist.css?v=calendar-v4-20260729">
   <link rel="stylesheet" href="./assets/css/site-modes.css?v=pure-otome-20260728">
-  <link rel="stylesheet" href="./assets/css/polish.css?v=calendar-v1-20260729">
+  <link rel="stylesheet" href="./assets/css/polish.css?v=calendar-v4-20260729">
 </head>
 <body>
   <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -726,6 +726,8 @@
       <div class="editor-group"><label for="libraryGameHours">累计时长</label><input class="product-input" id="libraryGameHours" type="number" min="0" step="0.5" placeholder="小时"></div>
       <div class="editor-group"><label for="libraryGameRating">主观评分</label><input class="product-input" id="libraryGameRating" type="number" min="0" max="5" step="0.1" placeholder="0—5"></div>
       <div class="editor-group"><label for="libraryGameRoutes">角色 / 路线</label><input class="product-input" id="libraryGameRoutes" maxlength="160" placeholder="用逗号分隔"></div>
+      <div class="editor-group"><label for="libraryGameStartDate">开始游玩日期</label><input class="product-input" id="libraryGameStartDate" type="date"></div>
+      <div class="editor-group"><label for="libraryGameCompleteDate">游戏全通日期</label><input class="product-input" id="libraryGameCompleteDate" type="date"></div>
       <div class="editor-group wide"><label for="libraryGameCover">封面图片网址（可选）</label><input class="product-input" id="libraryGameCover" type="text" placeholder="https://..."></div>
       <div class="editor-group wide"><label>或使用本地封面</label><button class="product-button secondary" id="libraryCoverUploadButton" type="button">选择本地图片</button><input id="libraryCoverUploadInput" type="file" accept="image/*" hidden></div>
       <div class="editor-group wide"><label for="libraryGameNote">一句话记录</label><textarea class="product-textarea" id="libraryGameNote" maxlength="120"></textarea></div>
@@ -912,6 +914,6 @@
   <script>window.AMORIST_MODE = 'public';</script>
   <script src="./assets/js/image-store.js"></script>
   <script src="./assets/js/data-model.js"></script>
-  <script src="./assets/js/public-bootstrap.js?v=calendar-v1-20260729"></script>
+  <script src="./assets/js/public-bootstrap.js?v=calendar-v4-20260729"></script>
 </body>
 </html>
