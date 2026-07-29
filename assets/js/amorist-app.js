@@ -3174,10 +3174,6 @@
         if($('#metricGames'))$('#metricGames').textContent=rows.length;
         if($('#metricFinished'))$('#metricFinished').textContent=rows.filter(g=>g.status==='已全通').length;
         if($('#metricHours'))$('#metricHours').textContent=`${Math.round(hours*10)/10}h`;
-        const host=$('#dashboardActivityWeek');if(!host)return;
-        const timelineEvents=readTimelineEvents().map(normalizeTimelineEvent);
-        const days=Array.from({length:7},(_,index)=>{const date=new Date();date.setDate(date.getDate()-(6-index));return date});
-        host.innerHTML=days.map(date=>{const key=`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`,count=timelineEvents.filter(event=>event.datePrecision==='day'&&event.occurredAt===key).length;return `<div class="activity-day ${count?'active':''}" aria-label="${key}，${count} 条时间线记录"><span>${['日','一','二','三','四','五','六'][date.getDay()]}</span><strong>${date.getDate()}</strong><i title="${count} 条时间线记录"></i></div>`}).join('');
       }
       window.addEventListener('amorist-data-changed',event=>{
         if(!event.detail||event.detail.timeline)updateConnectedDashboard();
