@@ -2399,6 +2399,7 @@ body { background:var(--product-bg); }
 .timeline-text .timeline-badge{display:inline-block;margin-top:5px;border-radius:999px;padding:2px 7px;font-size:8px;font-weight:850;background:#f3e4e7;color:#a45368}
 .timeline-text .timeline-badge.route{background:#e1ecf7;color:#4a6f9e}
 .timeline-text .timeline-badge.repo{background:#e8d5f0;color:#7b5090}
+.timeline-text .timeline-badge.session{background:#efe7d8;color:#876b3a}
 .timeline-empty{text-align:center;padding:60px 20px;color:var(--product-muted)}
 .timeline-empty strong{display:block;color:var(--product-ink);font:500 18px Georgia,"Noto Serif SC",serif;margin-bottom:8px}
 /* ══════ Enhanced Game Detail ══════ */
@@ -5438,6 +5439,8 @@ img[data-image-preview]{cursor:zoom-in;}
 .timeline-toolbar .product-select{min-width:135px;flex:1}.timeline-check{display:flex;align-items:center;gap:6px;color:var(--ink-muted);font-size:12px}
 .timeline-event-card{cursor:pointer}.timeline-event-card:hover{border-color:rgba(214,139,159,.45);transform:translateY(-1px)}
 .timeline-event-actions{display:flex;gap:8px;margin-top:10px}.timeline-event-actions button{border:0;background:transparent;color:var(--ink-muted);font:inherit;font-size:11px;cursor:pointer;padding:0}.timeline-event-actions button:hover{color:var(--rose)}
+.timeline-session-add{margin:0 0 14px;display:flex;justify-content:flex-end}
+.timeline-event-card.is-session{border-left:3px solid #d9c8a3}
 .game-log-head{justify-content:flex-end!important;gap:10px}.game-log-head h3{margin-right:auto}
 
 @media (max-width:680px){.timeline-dialog-overlay{padding:12px 8px}.timeline-toolbar .product-select{min-width:calc(50% - 5px)}}

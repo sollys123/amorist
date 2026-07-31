@@ -1,0 +1,173 @@
+### XLSX: C:\Users\yang.shen\Desktop\游戏游玩记录-2023.10.01.xlsx
+
+=== SHEET: Sheet1 (rows=368, cols=2) ===
+游戏名称	游玩日期
+璃夢泡影之世外浮城	2025-08-21 00:00:00
+璃夢泡影之世外浮城	2025-08-20 00:00:00
+璃夢泡影之世外浮城	2025-08-19 00:00:00
+璃夢泡影之世外浮城	2025-08-15 00:00:00
+璃夢泡影之世外浮城	2025-08-14 00:00:00
+璃夢泡影之世外浮城	2025-08-13 00:00:00
+璃夢泡影之世外浮城	2025-08-10 00:00:00
+璃夢泡影之世外浮城	2025-08-08 00:00:00
+Honey Vibes	2026-04-06 00:00:00
+Honey Vibes	2026-04-05 00:00:00
+Honey Vibes	2026-04-01 00:00:00
+Honey Vibes	2026-03-31 00:00:00
+Honey Vibes	2026-03-30 00:00:00
+Honey Vibes	2026-03-26 00:00:00
+Honey Vibes	2026-03-13 00:00:00
+Honey Vibes	2026-03-12 00:00:00
+OVER REQUIEMZ	2025-06-30 00:00:00
+OVER REQUIEMZ	2025-06-29 00:00:00
+OVER REQUIEMZ	2025-06-28 00:00:00
+OVER REQUIEMZ	2025-06-27 00:00:00
+OVER REQUIEMZ	2025-06-26 00:00:00
+OVER REQUIEMZ	2025-06-25 00:00:00
+OVER REQUIEMZ	2025-06-24 00:00:00
+OVER REQUIEMZ	2025-06-23 00:00:00
+終遠的威爾修 -ErroR:salvation-	2025-01-09 00:00:00
+終遠的威爾修 -ErroR:salvation-	2024-12-20 00:00:00
+終遠的威爾修 -ErroR:salvation-	2024-09-29 00:00:00
+終遠的威爾修 -ErroR:salvation-	2024-09-28 00:00:00
+終遠的威爾修 -ErroR:salvation-	2024-08-08 00:00:00
+終遠的威爾修 -ErroR:salvation-	2024-08-07 00:00:00
+終遠的威爾修 -ErroR:salvation-	2024-08-06 00:00:00
+終遠的威爾修 -ErroR:salvation-	2024-08-04 00:00:00
+終遠的威爾修 -ErroR:salvation-	2024-08-03 00:00:00
+終遠的威爾修 -ErroR:salvation-	2024-07-27 00:00:00
+終遠的威爾修 -ErroR:salvation-	2024-07-26 00:00:00
+終遠的威爾修 -ErroR:salvation-	2024-07-20 00:00:00
+終遠的威爾修 -ErroR:salvation-	2024-07-19 00:00:00
+終遠的威爾修 -ErroR:salvation-	2024-07-07 00:00:00
+終遠的威爾修 -ErroR:salvation-	2024-07-06 00:00:00
+9 R.I.P.	2025-11-12 00:00:00
+Piofiore no banshou -ricordo-	2026-03-20 00:00:00
+Piofiore no banshou -ricordo-	2026-03-19 00:00:00
+Piofiore no banshou -ricordo-	2026-03-18 00:00:00
+Piofiore no banshou -ricordo-	2026-03-17 00:00:00
+Piofiore no banshou -ricordo-	2026-03-16 00:00:00
+Piofiore no banshou -ricordo-	2026-03-15 00:00:00
+Piofiore no banshou -ricordo-	2026-03-05 00:00:00
+Piofiore no banshou -ricordo-	2026-03-04 00:00:00
+DYNAMIC CHORD 動態和弦 feat.[rêve parfait] Remaster edition	2026-07-12 00:00:00
+DYNAMIC CHORD 動態和弦 feat.[rêve parfait] Remaster edition	2026-07-11 00:00:00
+DYNAMIC CHORD 動態和弦 feat.[rêve parfait] Remaster edition	2026-05-25 00:00:00
+DYNAMIC CHORD 動態和弦 feat.[rêve parfait] Remaster edition	2026-05-20 00:00:00
+DYNAMIC CHORD 動態和弦 feat.[rêve parfait] Remaster edition	2026-05-19 00:00:00
+DYNAMIC CHORD 動態和弦 feat.[rêve parfait] Remaster edition	2026-05-18 00:00:00
+DYNAMIC CHORD 動態和弦 feat.[rêve parfait] Remaster edition	2026-05-17 00:00:00
+DYNAMIC CHORD 動態和弦 feat.[rêve parfait] Remaster edition	2026-05-16 00:00:00
+死神と少女	2026-07-19 00:00:00
+死神と少女	2026-03-18 00:00:00
+死神と少女	2026-03-17 00:00:00
+死神と少女	2026-03-16 00:00:00
+死神と少女	2026-03-15 00:00:00
+死神と少女	2026-03-14 00:00:00
+死神と少女	2026-03-13 00:00:00
+死神と少女	2026-03-09 00:00:00
+天獄亂鬥-strayside-	2025-09-29 00:00:00
+天獄亂鬥-strayside-	2025-09-28 00:00:00
+天獄亂鬥-strayside-	2025-09-26 00:00:00
+天獄亂鬥-strayside-	2025-09-25 00:00:00
+天獄亂鬥-strayside-	2025-09-23 00:00:00
+天獄亂鬥-strayside-	2025-09-22 00:00:00
+天獄亂鬥-strayside-	2025-09-21 00:00:00
+天獄亂鬥-strayside-	2025-09-19 00:00:00
+マツリカの炯-kEi- 天命華燭伝	2026-07-06 00:00:00
+マツリカの炯-kEi- 天命華燭伝	2026-06-25 00:00:00
+マツリカの炯-kEi- 天命華燭伝	2026-06-22 00:00:00
+マツリカの炯-kEi- 天命華燭伝	2026-06-21 00:00:00
+マツリカの炯-kEi- 天命華燭伝	2026-06-20 00:00:00
+マツリカの炯-kEi- 天命華燭伝	2026-06-19 00:00:00
+マツリカの炯-kEi- 天命華燭伝	2026-06-15 00:00:00
+... (288 more rows)
+
+
+### GAMES IN amorist-data.json
+games count: 85
+game-bgm-21015	失忆症
+game-bgm-75525	花之女王
+game-bgm-107473	Code:Realize ～创世的公主～
+game-bgm-144083	项圈×恶意
+game-bgm-144084	灰鹰幻境
+game-bgm-190364	BLACK WOLVES SAGA -Weiβ und Schwarz-
+game-bgm-192495	百密一疏少女心
+game-bgm-224576	项圈×恶意 -Unlimited-
+game-bgm-224579	异世界配信：谎言与真实
+game-bgm-259951	奥林匹亚的晚宴
+game-bgm-259952	幻奏咖啡厅-Enchanté-
+game-bgm-283667	时钟机关默示录
+game-bgm-283668	第六妖守
+game-bgm-283695	虔诚之花的晚钟 -Episodio1926-
+game-bgm-320129	终远的威尔修 -ErroR:salvation-
+game-bgm-363422	天狱乱斗 -strayside-
+game-bgm-399659	9 R.I.P.
+game-bgm-399668	终远的威尔修 -EpiC:lycoris-
+game-bgm-419183	共生邱比特 -Sweet & Spicy Darling.-
+game-bgm-454091	米斯托尼亚的翅望 -The Lost Delight-
+game-bgm-454097	茉莉花之炯 天命胤异传
+game-bgm-454102	奥兹国安魂曲
+game-bgm-614295	虔诚之花的晚钟 -Ricordo-
+game-bgm-508806	茉莉花之炯-kEi-天命华烛传
+game-bgm-20936	死神与少女
+game-bgm-50756	月影之锁 错乱偏执狂
+game-bgm-78328	月影の鎖 -狂爛モラトリアム-
+game-bgm-122720	SWEET CLOWN ～午前三時のオカシな道化師～
+game-bgm-102176	妖怪米饭
+game-bgm-114220	DYNAMIC CHORD feat.[rêve parfait]
+game-bgm-120512	DYNAMIC CHORD feat.Liar-S
+game-bgm-138703	DYNAMIC CHORD feat.KYOHSO
+game-bgm-165876	妖怪米饭～再来一碗！～
+game-bgm-169077	Blackish House sideA→
+game-bgm-208460	Blackish House ←sideZ
+game-bgm-214711	Re:BIRTHDAY SONG～恋を唄う死神～another record
+game-bgm-215844	DYNAMIC CHORD feat.apple-polisher
+game-bgm-236084	Un:BIRTHDAY SONG~愛を唄う死神~another record
+game-bgm-39115	黑狼传说 血色梦魇
+game-bgm-41405	BLACK WOLVES SAGA -Last Hope-
+game-bgm-50757	剑为君舞
+game-bgm-125127	如果这个世界有神明大人存在的话
+game-bgm-169278	剑为君舞 百夜缀
+game-bgm-96373	我的超级现充生活
+game-bgm-113920	黑蝶幻境
+game-bgm-117949	大正×对称爱丽丝 episode 1
+game-bgm-139536	大正×对称爱丽丝 episode 3
+game-bgm-144085	幸运之杖R
+game-bgm-144251	百花百狼～战国忍法帖～
+game-bgm-163337	大正×对称爱丽丝 epilogue
+game-bgm-190099	无法触碰的掌心
+game-bgm-198187	大正×对称爱丽丝 HEADS&TAILS
+game-bgm-207082	吉原彼岸花 久遠の契り
+game-bgm-246055	毘卢遮那战姬 ～源平飞花梦想～
+game-bgm-283691	黑桃国的爱丽丝 ～Wonderful White World～
+game-bgm-283693	共生邱比特
+game-bgm-336364	迂回落幕的终章 —蝶与花的鸟笼—
+game-bgm-353760	even if TEMPEST 黄昏中魔女如是说
+game-bgm-358103	毘卢遮那战姬 ~一树之风~
+game-bgm-369049	巴别十书：如何逃离二重迷宫
+game-bgm-371349	提米拉纳国的好运公主与衰运骑士团
+game-bgm-404387	文字化化
+game-bgm-410218	璃梦泡影之世外浮城
+game-bgm-431099	even if TEMPEST 连缀之时的拂晓
+game-bgm-446374	Majestic☆Majolical
+game-bgm-459910	Folie Fatale 致命至爱
+game-bgm-463575	霓虹三国 -Echoes of the Lost-
+game-bgm-481196	Honey Vibes
+game-bgm-481203	夏空的独白～Another Memory～
+game-bgm-505060	UN:LOGICAL
+game-bgm-508756	奥林匹亚的晚宴 Catharsis
+game-bgm-508761	BYAKKO ～四神部隊炎恋記～
+game-bgm-539404	CRAZY CHA!N -エルピスの鎖-
+game-bgm-577075	陰キャラブコメ　インシツマシマシ
+game-bgm-577196	Le Mirage Mystique
+game-bgm-585249	Sullyland Nursery Rhyme
+game-bgm-596943	崩坏世界的指引之人
+game-bgm-613036	暴杀残雨之夜
+game-bgm-618415	君に惑い、君に溺れる。
+game-bgm-125180	大正×对称爱丽丝 episode 2
+game-bgm-119614	华彩煌煌，吾之一族 摩登时代
+game-bgm-126010	华彩煌煌，吾之一族 幻灯时代
+game-bgm-287683	心跳回忆女生版4
+game-bgm-28340	十三支演义 偃月三国传
+game-bgm-75523	十三支演义～偃月三国传～2

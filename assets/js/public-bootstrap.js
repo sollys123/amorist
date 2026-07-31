@@ -54,7 +54,7 @@
     try {
       const timeline=JSON.parse(storage['amorist-timeline-events-v1']||'[]');
       const events=Array.isArray(timeline)?timeline:(Array.isArray(timeline?.events)?timeline.events:[]);
-      storage['amorist-timeline-events-v1']=JSON.stringify({version:2,events:events.filter(event=>['started','completed'].includes(String(event?.type||'')))});
+      storage['amorist-timeline-events-v1']=JSON.stringify({version:2,events:events.filter(event=>['started','completed','session'].includes(String(event?.type||'')))});
     } catch {
       storage['amorist-timeline-events-v1']='{"version":2,"events":[]}';
     }
