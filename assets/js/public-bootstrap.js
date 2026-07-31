@@ -171,8 +171,8 @@
     .then(async payload => {
       window.__AMORIST_PUBLIC_DATA__ = payload;
       installVirtualStorage(payload);
-      await loadScript('./assets/js/amorist-app.js?v=timeline-batch-20260731');
-      await loadScript('./assets/js/oshi-hub.js?v=timeline-batch-20260731');
-      await loadScript('./assets/js/public-mode.js?v=timeline-batch-20260731');
+      await loadScript('./assets/js/amorist-app.js?v=timeline-v2-20260731');
+      await loadScript('./assets/js/oshi-hub.js?v=timeline-v2-20260731');
+      await loadScript('./assets/js/public-mode.js?v=timeline-v2-20260731');
     });
 })();
