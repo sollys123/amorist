@@ -3885,6 +3885,7 @@ const routes=$('#libraryGameRoutes').value.split(/[，,]/).map(x=>x.trim()).filt
       window.renderTimeline=renderTimeline;
       window.openTimelineRecordDialog=openTimelineRecordDialog;
       window.openTimelineSessionDialog=openTimelineSessionDialog;
+      window.openTimelineBatchImportDialog=openTimelineBatchImportDialog;
 
       /* Structured timeline UI */
       timelineStore?.migrate?.();
@@ -3920,6 +3921,54 @@ const routes=$('#libraryGameRoutes').value.split(/[，,]/).map(x=>x.trim()).filt
           toast(existing?'游玩记录已更新':'已记录今日游玩');
         });
       }
+      function openTimelineBatchImportDialog(){
+        const rows=games();
+        if(!rows.length){toast('请先在游戏档案里添加作品');go('library');return;}
+        const overlay=document.createElement('div');
+        overlay.className='product-overlay open';
+        overlay.setAttribute('role','dialog');
+        overlay.setAttribute('aria-modal','true');
+        const gameOptions=rows.map(g=>`<option value="${safe(g.id)}">${safe(g.name)}</option>`).join('');
+        overlay.innerHTML=`<form class="product-dialog" style="max-width:780px"><div class="product-dialog-head"><h2>批量导入游玩记录</h2><button class="product-dialog-close" type="button" aria-label="关闭">×</button></div><div class="product-dialog-grid"><div class="editor-group wide"><label for="batchImportText">粘贴表格（每行一条：游戏名 + 日期，Tab 或逗号分隔，可直接从 Excel 复制两列）</label><textarea class="product-textarea" id="batchImportText" rows="8" placeholder="璃梦泡影之世外浮城,2025-08-21&#10;Honey Vibes,2026-04-06"></textarea></div><div class="editor-group wide" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="button" class="product-button secondary" id="batchParseBtn">解析预览</button><span id="batchParseHint" class="playing-meta"></span></div><div class="editor-group wide" id="batchPreviewWrap" hidden><label>预览（红色行未匹配，请下拉选择对应游戏，或选「跳过」略过该行）</label><div id="batchPreviewTable" class="batch-preview-table"></div><div class="product-dialog-actions"><button type="button" class="product-button rose" id="batchImportBtn">导入选中记录</button></div></div></div></form>`;
+        document.body.appendChild(overlay);
+        const close=()=>overlay.remove();
+        overlay.querySelector('.product-dialog-close').onclick=close;
+        overlay.addEventListener('click',e=>{if(e.target===overlay)close();});
+        const norm=s=>String(s||'').normalize('NFKC').trim().toLowerCase();
+        const gameMap={};rows.forEach(g=>{gameMap[norm(g.name)]=g;});
+        const parseDate=v=>{const s=String(v||'').trim();const m=s.match(/(\d{4})[\/-](\d{1,2})[\/-](\d{1,2})/);return m?`${m[1]}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`:''};
+        overlay.querySelector('#batchParseBtn').onclick=()=>{
+          const text=overlay.querySelector('#batchImportText').value.trim();
+          if(!text){toast('请先粘贴表格');return;}
+          const lines=text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+          const parsed=[];
+          lines.forEach(line=>{
+            const parts=line.split(/\t|,|，/).map(p=>p.trim()).filter(Boolean);
+            if(parts.length<2)return;
+            let name='',date='';
+            for(const p of parts){const d=parseDate(p);if(d&&!date)date=d;else if(!name)name=p;}
+            if(name&&date)parsed.push({name,date});
+          });
+          if(!parsed.length){overlay.querySelector('#batchParseHint').textContent='未解析到有效行（需含游戏名和日期）';return;}
+          parsed.forEach(r=>{r.game=gameMap[norm(r.name)]||null;r.gameId=r.game?.id||'';});
+          const matched=parsed.filter(r=>r.game).length;
+          overlay.querySelector('#batchParseHint').textContent=`解析 ${parsed.length} 行 · 已匹配 ${matched} · 待选 ${parsed.length-matched}`;
+          const table=overlay.querySelector('#batchPreviewTable');
+          table.innerHTML=`<div class="batch-row batch-row-head"><span>原文游戏名</span><span>日期</span><span>对应游戏</span></div>`+parsed.map((r,i)=>`<div class="batch-row ${r.game?'':'batch-row-unmatched'}"><span class="batch-cell-name">${safe(r.name)}</span><span>${safe(r.date)}</span><select class="product-select batch-game-select" data-batch-idx="${i}"><option value="">跳过</option>${gameOptions}</select></div>`).join('');
+          parsed.forEach((r,i)=>{if(r.game){const sel=table.querySelector(`[data-batch-idx="${i}"]`);if(sel)sel.value=r.gameId;}});
+          overlay.querySelector('#batchPreviewWrap').hidden=false;
+          overlay.querySelector('#batchImportBtn').onclick=()=>{
+            const sels=[...table.querySelectorAll('.batch-game-select')];
+            const existing=new Set(readTimelineEvents().map(e=>e.id));
+            const toAdd=[];
+            sels.forEach((sel,i)=>{const gid=sel.value;if(!gid)return;const r=parsed[i];const eid=`session-import-${gid}-${r.date}`;if(existing.has(eid))return;existing.add(eid);toAdd.push(normalizeTimelineEvent({id:eid,gameId:gid,type:'session',occurredAt:r.date,datePrecision:'day',title:timelineTypeLabel('session'),note:'',source:'batch-import'}));});
+            if(!toAdd.length){toast('没有可导入的新记录（可能都已存在或全部跳过）');return;}
+            writeTimelineEvents([...readTimelineEvents(),...toAdd]);
+            close();renderTimeline();
+            toast(`已导入 ${toAdd.length} 条游玩记录`);
+          };
+        };
+      }
       function timelineControlHtml(gameRows,events){const years=[...new Set(events.map(e=>String(e.occurredAt||'').slice(0,4)).filter(Boolean))].sort().reverse();return `<div class="timeline-toolbar"><select class="product-select" id="timelineTypeFilter"><option value="all">全部时间</option><option value="started">开始游玩</option><option value="completed">游戏全通</option><option value="session">游玩记录</option></select><select class="product-select" id="timelineGameFilter"><option value="all">所有游戏</option>${gameRows.map(g=>`<option value="${safe(g.id)}">${safe(g.name)}</option>`).join('')}</select><select class="product-select" id="timelineYearFilter"><option value="all">全部年份</option>${years.map(year=>`<option>${year}</option>`).join('')}</select><label class="timeline-check"><input type="checkbox" id="timelineUnknownFilter" ${timelineState.unknown?'checked':''}>包含日期不确定</label></div>`}
       function renderTimeline(){const host=$('#timelineContent');if(!host)return;const gameRows=games(),all=readTimelineEvents().map(normalizeTimelineEvent).filter(event=>['started','completed'].includes(event.type));if(!['all','started','completed'].includes(timelineState.type))timelineState.type='all';const filtered=all.filter(event=>(timelineState.type==='all'||event.type===timelineState.type)&&(timelineState.game==='all'||String(event.gameId)===String(timelineState.game))&&(timelineState.year==='all'||String(event.occurredAt).startsWith(timelineState.year))&&(timelineState.unknown||event.datePrecision!=='unknown'));const groups={};filtered.sort((a,b)=>eventSortValue(b)-eventSortValue(a)).forEach(event=>{const key=event.datePrecision==='unknown'?'日期待确认':String(event.occurredAt||'').slice(0,7)||'日期待确认';(groups[key]??=[]).push(event)});const body=Object.entries(groups).map(([key,events])=>`<div class="timeline-month"><div class="timeline-month-head"><h3>${safe(key)}</h3><span>${events.length} 条记录</span></div>${events.map(event=>{const game=gameRows.find(row=>String(row.id)===String(event.gameId)),name=game?.name||timelineGameName(event.gameId),cover=game?.cover||'';return `<article class="timeline-entry timeline-event-card${event.type==='session'?' is-session':''}" data-timeline-event="${safe(event.id)}" data-game-id="${safe(event.gameId)}"><div class="timeline-date">${safe(timelineDateLabel(event))}</div><div class="timeline-body"><div class="timeline-cover">${cover?`<img src="${safe(cover)}" alt="${safe(name)}" referrerpolicy="no-referrer">`:safe(initial(name))}</div><div class="timeline-text"><strong>${safe(name)}</strong><span class="timeline-badge">${safe(timelineTypeLabel(event.type))}</span>${window.AMORIST_MODE==='editor'?`<div class="timeline-event-actions"><button type="button" data-timeline-edit="${safe(event.id)}">编辑</button><button type="button" data-timeline-delete="${safe(event.id)}">删除</button></div>`:''}</div></div></article>`}).join('')}</div>`).join('');host.innerHTML=timelineControlHtml(gameRows,all)+(body||'<div class="timeline-empty"><strong>还没有游玩时间</strong><p>时间线只记录游戏的开始游玩时间和全通时间。</p></div>');$('#timelineTypeFilter').value=timelineState.type;$('#timelineTypeFilter').onchange=e=>{timelineState.type=e.target.value;renderTimeline()};$('#timelineGameFilter').value=timelineState.game;$('#timelineGameFilter').onchange=e=>{timelineState.game=e.target.value;renderTimeline()};$('#timelineYearFilter').value=timelineState.year;$('#timelineYearFilter').onchange=e=>{timelineState.year=e.target.value;renderTimeline()};$('#timelineUnknownFilter').onchange=e=>{timelineState.unknown=e.target.checked;renderTimeline()};const backfillButton=$('#timelineBackfillOpen');if(backfillButton)backfillButton.onclick=()=>openTimelineBackfill(gameRows[0]?.id);host.querySelectorAll('[data-timeline-edit]').forEach(button=>button.onclick=e=>{e.stopPropagation();const event=all.find(row=>row.id===button.dataset.timelineEdit);if(event)openTimelineRecordDialog(event.gameId,event)});host.querySelectorAll('[data-timeline-delete]').forEach(button=>button.onclick=e=>{e.stopPropagation();if(!confirm('删除这条时间线记录？'))return;writeTimelineEvents(readTimelineEvents().filter(row=>row.id!==button.dataset.timelineDelete));renderTimeline()});host.querySelectorAll('.timeline-event-card').forEach(card=>card.onclick=e=>{if(e.target.closest('button'))return;const id=card.dataset.gameId;go('library');setTimeout(()=>renderGameDetail(id),0)})}
 
@@ -3943,7 +3992,7 @@ const routes=$('#libraryGameRoutes').value.split(/[，,]/).map(x=>x.trim()).filt
         const filtered=all.filter(event=>(timelineState.type==='all'||timelineState.type===event.type)&&(timelineState.game==='all'||String(event.gameId)===String(timelineState.game))&&(timelineState.year==='all'||String(event.occurredAt).startsWith(timelineState.year))&&(timelineState.unknown||event.datePrecision!=='unknown'));
         const groups={};filtered.slice().sort((a,b)=>eventSortValue(b)-eventSortValue(a)).forEach(event=>{const key=event.datePrecision==='unknown'?'日期待确认':String(event.occurredAt||'').slice(0,7)||'日期待确认';(groups[key]??=[]).push(event)});
         const body=Object.entries(groups).map(([key,events])=>`<div class="timeline-month"><div class="timeline-month-head"><h3>${safe(key)}</h3><span>${events.length} 条记录</span></div>${events.map(event=>{const game=gameRows.find(row=>String(row.id)===String(event.gameId)),name=game?.name||timelineGameName(event.gameId),cover=game?.cover||'';return `<article class="timeline-entry timeline-event-card${event.type==='session'?' is-session':''}" data-timeline-event="${safe(event.id)}" data-game-id="${safe(event.gameId)}"><div class="timeline-date">${safe(timelineDateLabel(event))}</div><div class="timeline-body"><div class="timeline-cover">${cover?`<img src="${safe(cover)}" alt="${safe(name)}" referrerpolicy="no-referrer">`:safe(initial(name))}</div><div class="timeline-text"><strong>${safe(name)}</strong><span class="timeline-badge">${safe(timelineTypeLabel(event.type))}</span>${window.AMORIST_MODE==='editor'?`<div class="timeline-event-actions"><button type="button" data-timeline-edit="${safe(event.id)}">编辑</button><button type="button" data-timeline-delete="${safe(event.id)}">删除</button></div>`:''}</div></div></article>`}).join('')}</div>`).join('');
-        const sessionAddHtml=window.AMORIST_MODE==='editor'?'<div class="timeline-session-add"><button type="button" class="product-button rose small" id="timelineSessionAdd">＋ 记录今日游玩</button></div>':'';
+        const sessionAddHtml=window.AMORIST_MODE==='editor'?'<div class="timeline-session-add"><button type="button" class="product-button rose small" id="timelineSessionAdd">＋ 记录今日游玩</button><button type="button" class="product-button secondary small" id="timelineBatchImport">批量导入</button></div>':'';
         host.innerHTML=sessionAddHtml+timelineControlHtml(gameRows,all)+(timelineState.view==='calendar'?timelineCalendarHtml(gameRows,filtered):(body||'<div class="timeline-empty"><strong>还没有游玩时间</strong><p>在游戏档案里记录开始与全通，或用上方按钮记一笔日常游玩。</p></div>'));
         $('#timelineTypeFilter').value=timelineState.type;$('#timelineGameFilter').value=timelineState.game;$('#timelineYearFilter').value=timelineState.year;
         $('#timelineTypeFilter').onchange=e=>{timelineState.type=e.target.value;renderTimeline()};$('#timelineGameFilter').onchange=e=>{timelineState.game=e.target.value;renderTimeline()};$('#timelineYearFilter').onchange=e=>{timelineState.year=e.target.value;renderTimeline()};$('#timelineUnknownFilter').onchange=e=>{timelineState.unknown=e.target.checked;renderTimeline()};
@@ -3953,6 +4002,7 @@ const routes=$('#libraryGameRoutes').value.split(/[，,]/).map(x=>x.trim()).filt
         host.querySelector('[data-calendar-today]')?.addEventListener('click',()=>{timelineState.calendarMonth=localDate().slice(0,7);renderTimeline()});
         host.querySelectorAll('[data-timeline-edit]').forEach(button=>button.onclick=e=>{e.stopPropagation();const event=all.find(row=>row.id===button.dataset.timelineEdit);if(!event)return;if(event.type==='session')openTimelineSessionDialog(event);else openTimelineRecordDialog(event.gameId,event)});host.querySelectorAll('[data-timeline-delete]').forEach(button=>button.onclick=e=>{e.stopPropagation();if(!confirm('删除这条时间线记录？'))return;writeTimelineEvents(readTimelineEvents().filter(row=>row.id!==button.dataset.timelineDelete));renderTimeline()});
         $('#timelineSessionAdd')?.addEventListener('click',()=>openTimelineSessionDialog());
+        $('#timelineBatchImport')?.addEventListener('click',()=>openTimelineBatchImportDialog());
         const openGame=id=>{go('library');setTimeout(()=>renderGameDetail(id),0)};host.querySelectorAll('.timeline-event-card').forEach(card=>card.onclick=e=>{if(e.target.closest('button'))return;openGame(card.dataset.gameId)});host.querySelectorAll('[data-calendar-game]').forEach(button=>button.onclick=()=>openGame(button.dataset.calendarGame));
       }
 
