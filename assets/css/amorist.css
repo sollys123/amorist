@@ -5447,6 +5447,25 @@ img[data-image-preview]{cursor:zoom-in;}
 .timeline-session-add{margin:0 0 14px;display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
 .batch-preview-table{display:flex;flex-direction:column;gap:6px;max-height:360px;overflow:auto;border:1px solid rgba(90,69,83,.12);border-radius:10px;padding:10px;background:rgba(255,255,255,.5)}
 .batch-row{display:grid;grid-template-columns:1.4fr .8fr 1.1fr;gap:8px;align-items:center;font-size:12px;padding:2px 0}
+/* 浅色/深色模式：强制下划线输入 + 纯色框，区别于渐变模式的圆角框+渐变背景 */
+body[data-color-style="solid"] .field,
+body[data-color-style="solid"] .choice-box,
+body[data-color-style="dark"] .field,
+body[data-color-style="dark"] .choice-box{border:0!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+body[data-color-style="solid"] .basic-info .field,
+body[data-color-style="dark"] .basic-info .field{background:transparent!important}
+body[data-color-style="solid"] .image-tile,
+body[data-color-style="dark"] .image-tile{border:1px solid var(--line)!important;border-radius:4px!important;background:color-mix(in srgb,var(--soft) 18%,var(--paper))!important;box-shadow:none!important}
+body[data-color-style="solid"] .favorite-card,
+body[data-color-style="solid"] .preference-card,
+body[data-color-style="solid"] .rating-panel,
+body[data-color-style="solid"] .favorite-review,
+body[data-color-style="solid"] .repo-note,
+body[data-color-style="dark"] .favorite-card,
+body[data-color-style="dark"] .preference-card,
+body[data-color-style="dark"] .rating-panel,
+body[data-color-style="dark"] .favorite-review,
+body[data-color-style="dark"] .repo-note{background:color-mix(in srgb,var(--soft) 18%,var(--paper))!important;border:1px solid var(--line)!important;border-radius:4px!important;box-shadow:none!important}
 .batch-row-head{font-weight:600;color:var(--ink-muted);border-bottom:1px solid rgba(90,69,83,.1);padding-bottom:6px;margin-bottom:4px}
 .batch-row-unmatched{background:rgba(214,139,159,.1);border-radius:6px;padding:6px}
 .batch-cell-name{word-break:break-all}
