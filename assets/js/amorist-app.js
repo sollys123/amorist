@@ -2719,7 +2719,8 @@
         $p('#libraryGameProgress').value = Number(game?.progress || 0);
         $p('#libraryGameCover').value = game?.cover || '';
         $p('#libraryGameNote').value = game?.note || '';
-        $p('#libraryGamePlatform').value = game?.platform || '';
+        const platformField=$p('#libraryGamePlatform'),platform=game?.platform||'';
+        if(platformField){if(platform&&platformField.options&&!Array.from(platformField.options).some(option=>option.value===platform)){const option=document.createElement('option');option.value=platform;option.textContent=platform;platformField.append(option)}platformField.value=platform;}
         $p('#libraryGameHours').value = game?.hours ?? '';
         $p('#libraryGameRating').value = game?.rating ?? '';
         $p('#libraryGameRoutes').value = Array.isArray(game?.routes) ? game.routes.join('，') : (game?.routes || '');
@@ -3189,7 +3190,8 @@
         $('#libraryGameProgress').value=Number(game?.progress||0);
         $('#libraryGameCover').value=game?.cover||'';
         $('#libraryGameNote').value=game?.note||'';
-        $('#libraryGamePlatform').value=game?.platform||'';
+        const platformField=$('#libraryGamePlatform'),platform=game?.platform||'';
+        if(platformField){if(platform&&platformField.options&&!Array.from(platformField.options).some(option=>option.value===platform)){const option=document.createElement('option');option.value=platform;option.textContent=platform;platformField.append(option)}platformField.value=platform;}
         $('#libraryGameHours').value=game?.hours??'';
         $('#libraryGameRating').value=game?.rating??'';
         $('#libraryGameRoutes').value=Array.isArray(game?.routes)?game.routes.join('，'):(game?.routes||'');

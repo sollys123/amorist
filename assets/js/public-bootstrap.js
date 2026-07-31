@@ -171,8 +171,8 @@
     .then(async payload => {
       window.__AMORIST_PUBLIC_DATA__ = payload;
       installVirtualStorage(payload);
-      await loadScript('./assets/js/amorist-app.js?v=calendar-v4-20260729');
-      await loadScript('./assets/js/oshi-hub.js?v=calendar-v4-20260729');
-      await loadScript('./assets/js/public-mode.js?v=calendar-v4-20260729');
+      await loadScript('./assets/js/amorist-app.js?v=platform-v1-20260731');
+      await loadScript('./assets/js/oshi-hub.js?v=platform-v1-20260731');
+      await loadScript('./assets/js/public-mode.js?v=platform-v1-20260731');
     });
 })();
